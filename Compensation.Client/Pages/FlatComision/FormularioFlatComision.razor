@@ -1,0 +1,31 @@
+﻿<EditForm Model="@flatComision" OnValidSubmit="@OnValidSubmit">
+    <div class="form-field">
+        <label>Descripcion:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@flatComision.Descripcion" />
+            <ValidationMessage For="@(()=> flatComision.Descripcion)" />
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Porcentaje:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@flatComision.Porcentaje" />
+            <ValidationMessage For="@(()=> flatComision.Porcentaje)" />
+        </div>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+
+    [Parameter] public PCFlatComision flatComision { get; set; } = new PCFlatComision();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; } 
+
+}

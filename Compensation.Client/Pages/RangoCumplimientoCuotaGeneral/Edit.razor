@@ -1,0 +1,32 @@
+﻿@page  "/editar-RangoCumplimientoCuotaGeneral/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject RangoCumplimientoCuotaGeneralService rangoCumplimientoCuotaGeneralService
+@inject NavigationManager UriHelper
+
+    <h3>Editar Rango Cumplimiento Cuota General</h3>
+
+<FormularioRangoCumplimientoCuotaGeneral TextoBoton="Guardar" OnValidSubmit="@EditarRangoCumplimientoCuotaGeneral" pCRangoCumplimientoCuotaGeneral="@pCRangoCumplimientoCuotaGeneral" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    PCRangoCumplimientoCuotaGeneral pCRangoCumplimientoCuotaGeneral = new PCRangoCumplimientoCuotaGeneral();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        pCRangoCumplimientoCuotaGeneral = await rangoCumplimientoCuotaGeneralService.GetRangoCumplimientoCuotaGeneralByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarRangoCumplimientoCuotaGeneral()
+    {
+
+
+        await rangoCumplimientoCuotaGeneralService.UpdateRangoCumplimientoCuotaGeneralAsync(Id, pCRangoCumplimientoCuotaGeneral);
+        UriHelper.NavigateTo("indice-RangoCumplimientoCuotaGeneral");
+    }
+
+}

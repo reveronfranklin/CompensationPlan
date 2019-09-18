@@ -1,0 +1,32 @@
+﻿@page  "/editar-tasa-año-mes/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TasaAñoMesService tasaAñoMesService
+@inject NavigationManager UriHelper
+
+<h3>Editar Porcentaje Flat</h3>
+
+<FormularioTasaAñoMes TextoBoton="Guardar" OnValidSubmit="@EditarTasaAñoMes" pCTasaAñoMes="@pCTasaAñoMes" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    PCTasaAñoMes pCTasaAñoMes  = new PCTasaAñoMes();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        pCTasaAñoMes = await tasaAñoMesService.GetTasaAñoMesByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarTasaAñoMes()
+    {
+
+
+        await tasaAñoMesService.UpdateTasaAñoMesAsync(Id, pCTasaAñoMes);
+        UriHelper.NavigateTo("indice-tasa-año-mes");
+    }
+
+}

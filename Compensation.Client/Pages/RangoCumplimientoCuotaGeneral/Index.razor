@@ -1,0 +1,84 @@
+﻿@page "/indice-RangoCumplimientoCuotaGeneral"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject RangoCumplimientoCuotaGeneralService rangoCumplimientoCuotaGeneralService
+@inject IJSRuntime JS
+
+<h3>Rango de Cumplimiento de Cuota General</h3>
+<div>
+    <a class="btn btn-success" href="crear-flatcomision">Nuevo Porcentaje</a>
+</div>
+@if (pCRangoCumplimientoCuotaGeneral == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (pCRangoCumplimientoCuotaGeneral.Length == 0)
+{
+    <tesxt>  No existen datos de % Comision.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>Porcentaje</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pCRangoCumplimientoCuotaGeneral)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-RangoCumplimientoCuotaGeneral/@item.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                </td>
+
+                <td>@item.Id</td>
+                <td>@item.Desde</td>
+                <td>@item.Hasta</td>
+                <td>@item.Porcentaje</td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCRangoCumplimientoCuotaGeneral[] pCRangoCumplimientoCuotaGeneral { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        pCRangoCumplimientoCuotaGeneral = await rangoCumplimientoCuotaGeneralService.getRangoCumplimientoCuotaGeneralServiceAsync();
+    }
+
+    async Task Borrar(int Id)
+    {
+
+       
+        string Mensaje = $"deseas borrar este Porcentaje?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await rangoCumplimientoCuotaGeneralService.DeleteRangoCumplimientoCuotaGeneralAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
+
+}

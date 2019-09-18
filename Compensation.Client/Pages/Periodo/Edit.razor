@@ -1,0 +1,34 @@
+﻿@page  "/editar-periodo/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PeriodoService periodoService
+@inject NavigationManager UriHelper
+
+<h3>Editar Periodo de Pago</h3>
+<br />
+
+<FormularioPeriodo TextoBoton="Guardar" OnValidSubmit="@EditarPeriodo" periodo="@periodo" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    WSMY686 periodo = new WSMY686();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        periodo = await periodoService.GetPeriodoByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarPeriodo()
+    {
+
+        periodo.FechaActualiza = DateTime.Now;
+        await periodoService.UpdatePeriodoAsync(Id, periodo);
+        UriHelper.NavigateTo("indice-periodo");
+    }
+
+}
+

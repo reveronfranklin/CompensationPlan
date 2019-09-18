@@ -1,0 +1,82 @@
+﻿@page "/indice-ProductoCuota"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject ProductoCuotaService productoCuotaService
+@inject IJSRuntime JS
+
+<h3>Tipo Producto para Cuota</h3>
+<div>
+    <a class="btn btn-success" href="crear-ProductoCuota">Nuevo </a>
+</div>
+@if (productoCuota == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (productoCuota.Length == 0)
+{
+    <tesxt>  No existen datos de % Comision.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Descripcion</th>
+              
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in productoCuota)
+            {
+                <tr>
+                    <td>
+                        <a class="btn btn-success" href="editar-ProductoCuota/@item.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                    </td>
+
+                    <td>@item.Id</td>
+                    <td>@item.Descripcion</td>
+                   
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCProductoCuota[] productoCuota { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        productoCuota = await productoCuotaService.getProductoCuota();
+    }
+
+    async Task Borrar(int Id)
+    {
+
+        var selecionado = productoCuota.First(f => f.Id == Id);
+        string Mensaje = $"deseas borrar este Porcentaje: {selecionado.Descripcion}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await productoCuotaService.DeleteProductoCuotaAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
+
+}

@@ -1,0 +1,157 @@
+﻿@page "/indice-calculo"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject CalculoService  calculoService
+@inject IJSRuntime JS
+@using System.Threading;
+<h3>Calculo</h3>
+@if (calculando == false)
+{
+    <div>
+        <button class="btn btn-primary" @onclick="@(() => Calcular())"> Refrescar </button>
+    </div>
+}
+
+
+@if (resumenProcesoView == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (resumenProcesoView.Length == 0)
+{
+    <tesxt>  No existen datos de Calculo Comision.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+
+                @if (@procesoView.Culminado && @procesoView.PeriodoCerrado == false)
+                {
+
+                    <th></th>
+                }
+
+                <th>Periodo Desde</th>
+                <th>Periodo Desde</th>
+                <th>Iniciado</th>
+                <th>Culminado</th>
+                <th>Total Documentos</th>
+                <th>Doc Procesados</th>
+                <th>Doc Cerrados</th>
+                <th>Periodo Cerrado</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in resumenProcesoView)
+            {
+                <tr>
+                    @if (@item.Culminado && item.PeriodoCerrado == false)
+                    {
+                        <button class="btn btn-danger" @onclick="@(() => Ejecutar(item.Id))">Calcular</button>
+
+
+                    }
+                    @if (@item.Culminado && item.PeriodoCerrado == false)
+                    {
+                        <button class="btn btn-primary" @onclick="@(() => CerrarComision(item.Id))">Cierre</button>
+                    }
+
+                    <td>@item.PeriodoDesde</td>
+                    <td>@item.PeriodoHasta</td>
+                    <td>@item.Iniciado</td>
+                    <td>@item.Culminado</td>
+                    <td>@item.TotalReg</td>
+                    <td>@item.RegistrosProcesados</td>
+                    <td>@item.RegistrosCerrados</td>
+                    <td>@item.PeriodoCerrado</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    PCProceso[] resumenProcesoView { get; set; }
+    PCProceso procesoView { get; set; }
+
+    bool calculando = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Calcular();
+    }
+
+
+
+    async Task Calcular()
+    {
+
+
+        resumenProcesoView = await calculoService.EjecutarCalculoAsync();
+        procesoView = resumenProcesoView.FirstOrDefault();
+    }
+
+
+
+    async Task Ejecutar(int Id)
+    {
+
+        var selecionado = resumenProcesoView.First(f => f.Id == Id);
+        string Mensaje = $"deseas Ejecutar este periodo: {selecionado.PeriodoDesde}-{selecionado.PeriodoHasta}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+            if (selecionado.Iniciado == true && selecionado.Culminado == true)
+            {
+                selecionado.Iniciado = false;
+                selecionado.Culminado = false;
+                selecionado.RegistrosProcesados = 0;
+                selecionado.RegistrosCerrados = 0;
+                selecionado.Accion = 1; //Recalcular
+                await calculoService.UpdatePCProcesoAsync(Id, selecionado);
+            }
+
+            await Calcular();
+        }
+
+
+
+
+    }
+
+    async Task CerrarComision(int Id)
+    {
+
+        var selecionado = resumenProcesoView.First(f => f.Id == Id);
+        string Mensaje = $"deseas Cerrar este periodo: {selecionado.PeriodoDesde}-{selecionado.PeriodoHasta}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+            if (selecionado.Iniciado == true && selecionado.Culminado == true)
+            {
+                selecionado.Iniciado = false;
+                selecionado.Culminado = false;
+                selecionado.RegistrosCerrados = 0;
+                selecionado.Accion = 2; //Recalcular
+                await calculoService.UpdatePCProcesoAsync(Id, selecionado);
+            }
+
+            await Calcular();
+        }
+
+
+
+
+    }
+
+
+
+
+
+}
+

@@ -1,0 +1,38 @@
+﻿<EditForm Model="@pCTasaAñoMes" OnValidSubmit="@OnValidSubmit">
+    <div class="form-field">
+        <label>Año:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCTasaAñoMes.Año" />
+            <ValidationMessage For="@(()=> pCTasaAñoMes.Año)" />
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Mes:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCTasaAñoMes.Mes" />
+            <ValidationMessage For="@(()=> pCTasaAñoMes.Mes)" />
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Tasa:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCTasaAñoMes.Tasa" />
+            <ValidationMessage For="@(()=> pCTasaAñoMes.Tasa)" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+
+    [Parameter] public PCTasaAñoMes pCTasaAñoMes { get; set; } = new PCTasaAñoMes();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

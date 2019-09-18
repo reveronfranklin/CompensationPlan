@@ -1,0 +1,98 @@
+﻿@page "/indice-periodo"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PeriodoService periodoService
+@inject IJSRuntime JS
+
+
+<h3>Mantenimiento de Periodo</h3>
+<br />
+<div>
+    <a class="btn btn-success" href="crear-periodo">Nuevo Periodo</a>
+</div>
+<br />
+
+@if (periodo == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (periodo.Length == 0)
+{
+    <tesxt>  No existen datos de Periodo.....</tesxt>
+}
+else
+{
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>Activo</th>
+                <th>Descripcion</th>
+              
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in periodo)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-periodo/@item.ID">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.ID))">Borrar</button>
+                </td>
+
+                <td>@item.ID</td>
+                <td>@item.Desde</td>
+                <td>@item.Hasta</td>
+                <td>@item.Activo</td>
+                <td>@item.DescPeriodo</td>
+              
+                
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+
+
+    WSMY686[] periodoView { get; set; }
+    WSMY686[] periodo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        periodoView = await periodoService.getPeriodoAsync();
+        periodo = periodoView.OrderByDescending(p => p.Hasta).ToArray();
+    }
+    async Task Borrar(int Id)
+    {
+
+        var selecionado = periodo.First(f => f.ID == Id);
+        string Mensaje = $"deseas borrar este Periodo: {selecionado.DescPeriodo}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await periodoService.DeletePeriodoAsync(Id);
+
+            await GetData();
+        }
+
+
+
+
+    }
+}

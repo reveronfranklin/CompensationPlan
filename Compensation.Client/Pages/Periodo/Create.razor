@@ -1,0 +1,23 @@
+﻿@page "/crear-periodo"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PeriodoService periodoService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Porcentaje Flat</h3>
+<FormularioPeriodo TextoBoton="Crear" OnValidSubmit="@CrearPeriodo" periodo="@periodo" />
+
+@code {
+    WSMY686 periodo = new WSMY686();
+   
+    async Task CrearPeriodo()
+    {
+
+        periodo.FechaActualiza = DateTime.Now;
+        periodo.UsuarioActualiza = "SYSTEM";
+        await periodoService.InsertPeriodoAsync(periodo);
+        UriHelper.NavigateTo("indice-periodo");
+    }
+}
+

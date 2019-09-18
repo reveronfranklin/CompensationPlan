@@ -1,0 +1,31 @@
+﻿<EditForm Model="@pCPorcCantidadCategoriasCubiertas" OnValidSubmit="@OnValidSubmit">
+    <div class="form-field">
+        <label>Cantidad:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCPorcCantidadCategoriasCubiertas.Cantidad" />
+            <ValidationMessage For="@(()=> pCPorcCantidadCategoriasCubiertas.Cantidad)" />
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Porcentaje:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCPorcCantidadCategoriasCubiertas.Porcentaje" />
+            <ValidationMessage For="@(()=> pCPorcCantidadCategoriasCubiertas.Porcentaje)" />
+        </div>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+
+    [Parameter] public PCPorcCantidadCategoriasCubiertas pCPorcCantidadCategoriasCubiertas { get; set; } = new PCPorcCantidadCategoriasCubiertas();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

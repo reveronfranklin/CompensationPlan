@@ -1,0 +1,120 @@
+﻿@page "/indice-tasa-año-mes"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TasaAñoMesService tasaAñoMesService
+@inject IJSRuntime JS
+
+<h3>Tasa</h3>
+<div>
+    <a class="btn btn-success" href="crear-tasa-año-mes">Nueva Tasa</a>
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-2">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Año:</h5>
+                <br />
+                <input type="text" @bind="año" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                <br />
+                <button class="btn btn-primary" @onclick="@(() => GetDataAño())"> Buscar</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@if (pCTasaAñoMes == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (pCTasaAñoMes.Length == 0)
+{
+    <tesxt>  No existen datos de Tasa.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+
+           
+
+            <tr>
+                <th></th>
+
+                <th>Año</th>
+                <th>Mes</th>
+                <th>Tasa</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pCTasaAñoMesView)
+            {
+                <tr>
+                    <td>
+                        <a class="btn btn-success" href="editar-tasa-año-mes/@item.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                    </td>
+
+
+                    <td>@item.Año</td>
+                    <td>@item.Mes</td>
+                    <td>@item.Tasa</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCTasaAñoMes[] pCTasaAñoMes { get; set; }
+    PCTasaAñoMes[] pCTasaAñoMesView { get; set; }
+    int año = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        pCTasaAñoMes = await tasaAñoMesService.getTasaAñoMesnAsync();
+        pCTasaAñoMesView = pCTasaAñoMes;
+    }
+
+    async Task GetDataAño()
+    {
+        pCTasaAñoMes = await tasaAñoMesService.getTasaAñoMesnAsync();
+        if (año > 0)
+        {
+            pCTasaAñoMesView = pCTasaAñoMes.Where(t => t.Año == año).ToArray();
+        }
+        else
+        {
+            pCTasaAñoMesView = pCTasaAñoMes;
+        }
+
+    }
+
+    async Task Borrar(int Id)
+    {
+
+        var selecionado = pCTasaAñoMes.First(f => f.Id == Id);
+        string Mensaje = $"deseas borrar esta tasa: {selecionado.Año}-{selecionado.Mes}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await tasaAñoMesService.DeleteTasaAñoMesAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
+
+}

@@ -1,0 +1,63 @@
+﻿<EditForm Model="@periodo" OnValidSubmit="@OnValidSubmit">
+
+    <div class="form-group row mb-1">
+        <label class="col-sm-1 col-form-label" for="Desde">Desde:</label>
+
+        <div class="col-sm-2">
+            <InputDate Class="form-control" @bind-Value="@periodo.Desde" />
+            <ValidationMessage For="@(()=> periodo.Desde)" />
+        </div>
+
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-1 col-form-label" for="Hasta">Hasta:</label>
+
+        <div class="col-sm-2">
+            <InputDate Class="form-control" @bind-Value="@periodo.Hasta" />
+            <ValidationMessage For="@(()=> periodo.Hasta)" />
+        </div>
+
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-1 col-form-label" for="Descripcion">Descripcion:</label>
+
+        <div class="col-sm-2">
+            <InputText Class="form-control" @bind-Value="@periodo.DescPeriodo" />
+            <ValidationMessage For="@(()=> periodo.DescPeriodo)" />
+        </div>
+
+    </div>
+    <div class="form-group row mb-1">
+        <label class="col-sm-1 col-form-label" for="Activo">Activo:</label>
+
+        <div class="col-sm-2">
+            <InputCheckbox Class="form-control" @bind-Value="@periodo.Activo" />
+            <ValidationMessage For="@(()=> periodo.Activo)" />
+        </div>
+
+    </div>
+    
+
+    <br>
+
+    <br>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+    protected async override Task OnParametersSetAsync()
+    {
+
+
+      //  periodo.Desde = DateTime.Now;
+      //  periodo.Hasta = DateTime.Now;
+    }
+
+    [Parameter] public WSMY686 periodo { get; set; } = new WSMY686();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

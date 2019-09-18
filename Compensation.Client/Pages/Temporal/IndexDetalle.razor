@@ -1,0 +1,272 @@
+﻿@page "/indice-temporal-detalle/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TemporalService temporalService
+<h3>Consulta Temporal de Comisiones</h3>
+<br />
+<h4>Vendedor:@NombreVendedor</h4>
+<h4>Orden:@keyOrden</h4>
+<br />
+
+<br />
+
+<div class="search-bar">
+    <input bind-value-oninput="@SearchTermFR" @oninput="@PreformSearch" placeholder="search for customers or tickets" />.
+</div>
+
+    @if (detalleTemporal == null)
+    {
+        <tesxt>  Cargando.....</tesxt>
+    }
+
+    @if (detalleTemporal != null)
+    {
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+
+
+                    <th></th>
+                    <th>
+                        <div>
+
+                            <input type="text" @bind="documento" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                        </div>
+                    </th>
+                    <th>
+                        <div>
+
+                            <input type="text" @bind="orden" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" @onkeypress="LogKeyPressed"  />
+                        </div>
+                    </th>
+                    <th>
+                        <div>
+
+                            <input type="text" @bind="producto" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                        </div>
+                    </th>
+
+
+                    <th></th>
+
+                    <th>
+                        <div>
+
+                            <input type="text" @bind="tipoPagoDescripcion" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" @onblur="KeyHandler"/>
+                        </div>
+                    </th>
+                    <th> <button class="btn btn-primary" @onclick="@(() => GetData())"> Buscar</button></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+
+                </tr>
+                <tr>
+
+
+                    <th>Tr</th>
+                    <th>Doc.</th>
+                    <th>Orden</th>
+                    <th>Producto</th>
+                    <th>Monto</th>
+                    <th>Tipo Pago</th>
+                    <th>Comision</th>
+                    <th data-toggle="tooltip" data-placement="top" title="Porcentaje Comision Flat">% Tabla 1</th>
+                    <th data-toggle="tooltip" data-placement="top" title="Porc Rango Cumplimiento Cuota General">% Tabla 2</th>
+                    <th data-toggle="tooltip" data-placement="top" title="Porc Cantidad Cuotas Cumplidas">% Tabla 3</th>
+                    <th>Cant. Cuotas</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in FilteredToDos.OrderBy(d => d.Documento))
+                {
+                <tr>
+                    <td>@item.Transaccion</td>
+                    <td>@item.DocumentoString</td>
+                    <td>@item.OrdenString</td>
+                    <td>@item.Producto</td>
+                    <td align="right">@item.MontoRealString</td>
+                    <td>@item.DescripcionTipoPago</td>
+                    <td align="right">@item.MontoString</td>
+                    <td>@item.PorcFlat</td>
+                    <td>@item.PorcRangoCumplimientoCuotaGeneral</td>
+                    <td>@item.PorcCantidadCuotasCumplidas</td>
+                    <td>@item.CantidadCuotasCumplidas</td>
+
+
+
+                </tr>
+
+                }
+            <tr>
+
+
+                <td></td>
+                <td class="font-weight-bold">Total Vendedor==========></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td align="right" class="font-weight-bold">@TotalVendedorString</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
+    }
+
+
+    @code {
+
+
+
+        private string SearchTermFR { get; set; }
+
+        private void PreformSearch()
+        {
+            Console.WriteLine($"{SearchTermFR}");
+        }
+
+
+
+        [Parameter] public int Id { get; set; }
+
+        PCResumenComisionTemporal[] resumen { get; set; }
+        PCTemporal[] detalleTemporal { get; set; }
+        string CodigoVendedor = "";
+        string NombreVendedor = "";
+        decimal TotalVendedor = 0;
+        string TotalVendedorString = "";
+        string tipoPagoDescripcion="";
+        string orden = "";
+        string documento = "";
+        string producto = "";
+        string keyOrden = "";
+        PCResumenComisionTemporal ResumenView { get; set; }
+
+
+        // Initialize SearchTerm to "" to prevent null's
+        public string SearchTerm { get; set; } = "";
+
+
+        PCTemporal[] FilteredToDos { get; set; }
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            await GetData();
+
+        }
+        protected async override Task OnParametersSetAsync()
+        {
+            resumen = await temporalService.GetResumenVendedoByIdAsync(Id);
+
+            ResumenView = resumen.FirstOrDefault();
+            CodigoVendedor = ResumenView.CodigoVendedor;
+
+
+        }
+        async Task GetData()
+        {
+
+
+
+            Console.WriteLine("tipo:" + tipoPagoDescripcion);
+            Console.WriteLine("orden:" + orden);
+            Console.WriteLine("documento:" + documento);
+            Console.WriteLine("producto:" + producto);
+
+
+            resumen = await temporalService.GetResumenVendedoByIdAsync(Id);
+
+            ResumenView = resumen.FirstOrDefault();
+            CodigoVendedor = ResumenView.CodigoVendedor;
+            NombreVendedor = ResumenView.NombreVendedor;
+            detalleTemporal = await temporalService.GetDetalleTemporalByIdAsync(CodigoVendedor);
+
+
+
+
+            FilteredToDos = detalleTemporal;
+            if (documento!="")
+            {
+                FilteredToDos = detalleTemporal.Where(item => item.DocumentoString.ToLower().Contains(documento.ToLower())).ToArray();
+            }
+            if (orden!="")
+            {
+                FilteredToDos = detalleTemporal.Where(item =>item.OrdenString.ToLower().Contains(orden.ToLower())).ToArray();
+            }
+
+            if (producto!="")
+            {
+                FilteredToDos = detalleTemporal.Where(item => item.Producto.ToLower().Contains(producto.ToLower())).ToArray();
+            }
+
+
+            if (tipoPagoDescripcion!="")
+            {
+                FilteredToDos = detalleTemporal.Where(item => item.DescripcionTipoPago.ToLower().Contains(tipoPagoDescripcion.ToLower())).ToArray();
+            }
+
+            Console.WriteLine("Encontrados:" + FilteredToDos.Count());
+
+
+
+            TotalVendedor = 0;
+            foreach (var item in FilteredToDos)
+            {
+                TotalVendedor = TotalVendedor + item.BsComision;
+            }
+            TotalVendedorString = ToCurrencyString(TotalVendedor);
+
+
+        }
+
+        public string ToCurrencyString(decimal d)
+        {
+
+
+            return String.Format("{0:0,0.0}", d);
+        }
+
+        void LogKeyPressed(KeyboardEventArgs eventArgs)
+        {
+            if (eventArgs.Key.Length<=0)
+            {
+                 Console.WriteLine("blanco");
+            }
+
+            keyOrden =keyOrden+ eventArgs.Code;
+            Console.WriteLine("Key:" + eventArgs.Key);
+            Console.WriteLine("Code:" + eventArgs.Key);
+            Console.WriteLine("AltKey:" + eventArgs.AltKey);
+            Console.WriteLine("Type:" + eventArgs.Type);
+            Console.WriteLine("CtrlKey:" + eventArgs.CtrlKey);
+            Console.WriteLine("Location:" + eventArgs.Location);
+            Console.WriteLine("MetaKey:" + eventArgs.MetaKey);
+            Console.WriteLine("Repeat:" + eventArgs.Repeat);
+            Console.WriteLine("keyOrden:" + keyOrden);
+            
+            FilteredToDos = detalleTemporal;
+            FilteredToDos = detalleTemporal.Where(item =>item.OrdenString.ToLower().Contains(keyOrden.ToLower())).ToArray();
+
+
+        }
+
+        void KeyHandler()
+        {
+            Console.WriteLine("tipoPagoDescripcion:" + tipoPagoDescripcion);
+            FilteredToDos = detalleTemporal;
+            FilteredToDos = detalleTemporal.Where(item =>item.DescripcionTipoPago.ToLower().Contains(tipoPagoDescripcion.ToLower())).ToArray();
+        }
+
+
+
+
+    }

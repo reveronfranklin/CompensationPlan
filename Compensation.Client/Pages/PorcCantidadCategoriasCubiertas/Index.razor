@@ -1,0 +1,82 @@
+﻿@page "/indice-PorcCantidadCategoriasCubiertas"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PorcCantidadCategoriasCubiertasService  porcCantidadCategoriasCubiertasService
+@inject IJSRuntime JS
+
+    <h3>% Cantidad Categorias Cubiertas</h3>
+<div>
+    <a class="btn btn-success" href="crear-PorcCantidadCategoriasCubiertas">Nuevo</a>
+</div>
+@if (pCPorcCantidadCategoriasCubiertas == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (pCPorcCantidadCategoriasCubiertas.Length == 0)
+{
+    <tesxt>  No existen datos de % Comision.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Cantidad</th>
+                <th>Porcentaje</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pCPorcCantidadCategoriasCubiertas)
+            {
+                <tr>
+                    <td>
+                        <a class="btn btn-success" href="editar-PorcCantidadCategoriasCubiertas/@item.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                    </td>
+
+                    <td>@item.Id</td>
+                    <td>@item.Cantidad</td>
+                    <td>@item.Porcentaje</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCPorcCantidadCategoriasCubiertas[] pCPorcCantidadCategoriasCubiertas { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        pCPorcCantidadCategoriasCubiertas = await porcCantidadCategoriasCubiertasService.GetPorcCantidadCategoriasCubiertasAsync();
+    }
+
+    async Task Borrar(int Id)
+    {
+
+       
+        string Mensaje = $"deseas borrar este Porcentaje?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await porcCantidadCategoriasCubiertasService.DeletePorcCantidadCategoriasCubiertasAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
+
+}

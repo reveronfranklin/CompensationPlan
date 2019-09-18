@@ -1,0 +1,210 @@
+﻿@page "/indice-CuotaVentas"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject CuotaVentasService cuotaVentasService
+@inject OficinaService oficinaService
+@inject VendedorService vendedorService
+@inject IJSRuntime JS
+
+<h3>Cuota de Ventas</h3>
+<br />
+<div>
+    <a class="btn btn-success" href="crear-flatcomision">Nuevo</a>
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Año</h5>
+                <p class="card-text"></p>
+                <div>
+
+                    <input type="text" @bind="año" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Oficina</h5>
+                <p class="card-text"></p>
+                <select class="custom-select" id="oficinaDrop" @onchange="@OficinaSelectionChanged">
+                    <option value="">-- Select Oficina --</option>
+                    @if (oficinaList != null)
+                    {
+                        @foreach (var itemOficina in oficinaList)
+                        {
+                            <option value="@itemOficina.CodOficina">@itemOficina.NombreOficina</option>
+                        }
+                    }
+
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Consultor</h5>
+                <p class="card-text"></p>
+                <select class="custom-select" id="vendedorDrop" @onchange="@VendedorSelectionChanged">
+                    <option value="">-- Select Vendedor --</option>
+                    @if (vendedorList != null)
+                    {
+                        @foreach (var itemVendedor in vendedorList)
+                        {
+                            <option value="@itemVendedor.Codigo">@itemVendedor.Nombre</option>
+                        }
+                    }
+
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (pCCuotaVentas == null)
+{
+    <tesxt>  </tesxt>
+}
+else if (pCCuotaVentas.Length == 0)
+{
+    <tesxt>  No existen datos de Cuota.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+          
+            <tr>
+                <th></th>
+                <th>Año</th>
+                <th>Mes</th>
+                <th>Vendedor</th>
+                <th>IdCuota</th>
+                <th>Cuota</th>
+                <th>Venta</th>
+                <th>% Cumplimiento</th>
+                <th>Cuota USD</th>
+                <th>Venta USD</th>
+                <th>Tasa</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pCCuotaVentas)
+            {
+                <tr>
+                    <td>
+                        <a class="btn btn-success" href="editar-flatcomision/@item.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                    </td>
+
+
+                    <td>@item.Año</td>
+                    <td>@item.Mes</td>
+                    <td>@item.Vendedor - @item.NombreVendedor </td>
+                    <td>@item.IdProductoCuota- @item.DescripcionCuota</td>
+                    <td align="right">@item.CuotaString </td>
+                    <td align="right">@item.VentaString</td>
+                    <td align="right">@item.PorcCumplimiento</td>
+                    <td align="right">@item.CuotaUsdString</td>
+                    <td align="right">@item.VentaUsdString</td>
+                    <td align="right">@item.TasaUsdString</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCCuotaVentas[] pCCuotaVentas { get; set; }
+
+
+    PCOficina[] oficinaList { get; set; }
+
+    PCVendedor[] vendedorList { get; set; }
+
+    public int oficinaId = 0;
+    string codigoVendedor = "";
+    int año = DateTime.Now.Year;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetDataOficina();
+    }
+
+    async Task GetData(string codigoVendedor)
+    {
+
+
+        pCCuotaVentas = await cuotaVentasService.GetCuotaVentasByVendedorAsync(codigoVendedor);
+        if (año>0)
+        {
+           await  GetDataAño(año);
+        }
+    }
+    async Task GetDataAño(int año)
+    {
+
+
+        pCCuotaVentas = pCCuotaVentas.Where(c => c.Año == año).ToArray();
+    }
+
+    async Task Borrar(int Id)
+    {
+
+        var selecionado = pCCuotaVentas.First(f => f.Id == Id);
+        string Mensaje = $"deseas borrar esta Cuota?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await cuotaVentasService.DeleteCuotaVentasAsync(Id);
+            await GetData(codigoVendedor);
+        }
+
+
+
+
+    }
+
+    async Task GetDataOficina()
+    {
+        oficinaList = await oficinaService.GetOficinaAsync();
+    }
+    async Task OficinaSelectionChanged(ChangeEventArgs e)
+    {
+
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            oficinaId = id;
+
+            vendedorList = await vendedorService.GetVendedorAsync(id);
+        }
+
+
+
+    }
+
+    async Task VendedorSelectionChanged(ChangeEventArgs e)
+    {
+        string id = e.Value.ToString();
+
+        codigoVendedor = id;
+        pCCuotaVentas = null;
+        await GetData(codigoVendedor);
+
+
+
+
+    }
+
+}

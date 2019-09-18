@@ -1,0 +1,38 @@
+﻿<EditForm Model="@pCRangoCumplimientoCuotaGeneral" OnValidSubmit="@OnValidSubmit">
+    <div class="form-field">
+        <label>Desde:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCRangoCumplimientoCuotaGeneral.Desde" />
+            <ValidationMessage For="@(()=> pCRangoCumplimientoCuotaGeneral.Desde)" />
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Hasta:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCRangoCumplimientoCuotaGeneral.Hasta" />
+            <ValidationMessage For="@(()=> pCRangoCumplimientoCuotaGeneral.Hasta)" />
+        </div>
+    </div>
+    <div class="form-field">
+        <label>Porcentaje:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCRangoCumplimientoCuotaGeneral.Porcentaje" />
+            <ValidationMessage For="@(()=> pCRangoCumplimientoCuotaGeneral.Porcentaje)" />
+        </div>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+
+    [Parameter] public PCRangoCumplimientoCuotaGeneral pCRangoCumplimientoCuotaGeneral { get; set; } = new PCRangoCumplimientoCuotaGeneral();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

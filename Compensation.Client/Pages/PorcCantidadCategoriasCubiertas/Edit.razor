@@ -1,0 +1,33 @@
+﻿@page  "/editar-PorcCantidadCategoriasCubiertas/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PorcCantidadCategoriasCubiertasService  porcCantidadCategoriasCubiertasService
+@inject NavigationManager UriHelper
+
+    <h3>Editar Porcentaje Cantidad Categorias Cubiertas</h3>
+
+<FormularioPorcCantidadCategoriasCubiertas TextoBoton="Guardar" OnValidSubmit="@EditarPorcCantidadCategoriasCubiertas" pCPorcCantidadCategoriasCubiertas="@pCPorcCantidadCategoriasCubiertas" />
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+
+    PCPorcCantidadCategoriasCubiertas pCPorcCantidadCategoriasCubiertas = new PCPorcCantidadCategoriasCubiertas();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        pCPorcCantidadCategoriasCubiertas = await porcCantidadCategoriasCubiertasService.GetPorcCantidadCategoriasCubiertasByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarPorcCantidadCategoriasCubiertas()
+    {
+
+
+        await porcCantidadCategoriasCubiertasService.UpdatePorcCantidadCategoriasCubiertasAsync(Id, pCPorcCantidadCategoriasCubiertas);
+        UriHelper.NavigateTo("indice-PorcCantidadCategoriasCubiertas");
+    }
+
+}

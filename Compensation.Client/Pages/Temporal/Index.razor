@@ -1,0 +1,270 @@
+﻿@page "/indice-temporal"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject OficinaService oficinaService
+@inject VendedorService vendedorService
+@inject TemporalService temporalService
+@inject ResumenOficinaTemporalService resumenOficinaTemporalService
+<h3>Consulta Temporal de Comisiones</h3>
+<br />
+<br />
+
+
+@if (oficinaList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <div class="row" style="padding-top:10px">
+        <div class="form-group col-md-2">
+
+            <select class="custom-select" id="oficinaDrop" @onchange="@OficinaSelectionChanged">
+                <option value="">-- Select Oficina --</option>
+                <option value=0>-- Todo --</option>
+                @if (oficinaList != null)
+                {
+                    @foreach (var itemOficina in oficinaList)
+                    {
+                        <option value="@itemOficina.CodOficina">@itemOficina.NombreOficina</option>
+                    }
+                }
+
+
+            </select>
+
+        </div>
+        @*<div class="form-group col-md-2">
+                @if (oficinaId != 0)
+                {
+                    <div>
+                        <button class="btn btn-primary" @onclick="@(() => GetData())"> Buscar </button>
+                    </div>
+                }
+
+
+            </div>*@
+
+        @*<div class="form-group col-md-2">
+
+                <select id="vendedorDrop" @onchange="@VendedorSelectionChanged">
+                    <option value="">-- Select Oficina --</option>
+                    @if (vendedorList != null)
+                    {
+                        @foreach (var itemVendedor in vendedorList)
+                        {
+                            <option value="@itemVendedor.Codigo">@itemVendedor.Nombre</option>
+                        }
+                    }
+
+                </select>
+
+            </div>*@
+
+    </div>
+
+
+
+
+}
+
+
+
+
+@if (@ResumenView != null)
+{
+    <h4>@periodo</h4>
+
+    
+}
+
+
+@if (resumen != null)
+{
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th></th>
+            <th>Ficha</th>
+            <th>Consultor</th>
+            <th align="center">Monto</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (pCResumenOficinaTemporal != null)
+        {
+            @foreach (var item in pCResumenOficinaTemporal)
+            {
+                <tr>
+
+
+                    <td>@item.NombreOficina</td>
+
+
+                </tr>
+                @foreach (var itemResumen in resumen.Where(r => r.CodigoOficina == item.CodigoOficina))
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="indice-temporal-detalle/@itemResumen.Id">Ver Detalle</a>
+
+                        </td>
+
+                        <td>@itemResumen.Ficha</td>
+                        <td>@itemResumen.NombreVendedor</td>
+                        <td align="right">@itemResumen.MontoString</td>
+
+                    </tr>
+
+                }
+                <tr>
+
+
+                    <td></td>
+                    <td class="font-weight-bold">Total Oficina==========></td>
+                    <td></td>
+                    <td align="right" class="font-weight-bold">@item.MontoString</td>
+
+                </tr>
+
+            }
+        }
+        <tr>
+
+
+            <td></td>
+            <td class="font-weight-bold">Total Periodo==========></td>
+            <td></td>
+            <td align="right" class="font-weight-bold">@TotalperiodoString</td>
+
+        </tr>
+
+
+    </tbody>
+    </table>
+}
+@code {
+    PCOficina pCOficina = new PCOficina();
+
+    PCOficina[] oficinaList { get; set; }
+
+    PCVendedor[] vendedorList { get; set; }
+
+    PCResumenComisionTemporal[] resumen { get; set; }
+
+    PCResumenOficinaTemporal[] pCResumenOficinaTemporal { get; set; }
+
+
+
+
+    PCResumenComisionTemporal ResumenView { get; set; }
+
+    public string periodo = "";
+    public int oficinaId = 0;
+    string oficinaName = "";
+    string NombreOficina = "";
+    string vendedorName = "";
+    decimal TotalOficina = 0;
+    string TotalOficinaString = "";
+
+    decimal Totalperiodo = 0;
+    string TotalperiodoString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDataOficina();
+        await GetDataResumenOficina();
+    }
+
+    async Task GetDataOficina()
+    {
+        oficinaList = await oficinaService.GetOficinaAsync();
+    }
+
+    async Task GetDataResumenOficina()
+    {
+        pCResumenOficinaTemporal = await resumenOficinaTemporalService.GetResumenOficinaTemporalAsync();
+    }
+
+
+    async Task OficinaSelectionChanged(ChangeEventArgs e)
+    {
+
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            oficinaId = id;
+            await GetData();
+            vendedorList = await vendedorService.GetVendedorAsync(id);
+        }
+
+
+
+    }
+
+    async Task VendedorSelectionChanged(ChangeEventArgs e)
+    {
+        string id = e.Value.ToString();
+
+        vendedorName = id;
+
+
+
+
+
+
+    }
+
+    async Task GetData()
+    {
+       // resumen = await temporalService.GetResumenTemporalByIdAsync(oficinaId);
+       await GetDataResumenOficina();
+        resumen = await temporalService.getTemporalAsync();
+        if (oficinaId!=0)
+        {
+            resumen = resumen.Where(r => r.CodigoOficina == oficinaId).ToArray();
+        }
+        resumen = resumen.OrderBy(r => r.CodigoOficina).ToArray();
+        if (resumen != null)
+        {
+            ResumenView = resumen.FirstOrDefault();
+            if (ResumenView != null)
+            {
+                periodo = ResumenView.Periodo;
+                NombreOficina = ResumenView.NombreOficina;
+            }
+            TotalOficina = 0;
+            foreach (var item in resumen)
+            {
+                TotalOficina = TotalOficina + item.Monto;
+            }
+            TotalOficinaString = ToCurrencyString(TotalOficina);
+
+        }
+
+        if (oficinaId!=0)
+        {
+            pCResumenOficinaTemporal = pCResumenOficinaTemporal.Where(r => r.CodigoOficina == oficinaId).ToArray();
+        }
+
+            Totalperiodo = 0;
+            foreach (var item in pCResumenOficinaTemporal)
+            {
+                Totalperiodo = Totalperiodo + item.Monto;
+            }
+            TotalperiodoString = ToCurrencyString(Totalperiodo);
+
+
+    }
+
+
+    public string ToCurrencyString(decimal d)
+    {
+
+
+        return String.Format("{0:0,0.0}", d);
+    }
+
+
+}

@@ -1,0 +1,108 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Compensation.Client</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        @*<li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </li>*@
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="indice-calculo">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Calculo Comision
+            </NavLink>
+
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="indice-temporal">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Temporal Comision
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="indice-historico">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Historico Comision
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="indice-historicoOrden">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Historico por Orden
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="indice-historicoRecibo">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Historico por Recibo
+            </NavLink>
+        </li>
+        <ul class="nav flex-column">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-periodo">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Periodo Pago
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-FlatComision">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> % Flat Comision
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-RangoCumplimientoCuotaGeneral">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Cuota General
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-PorcCantidadCategoriasCubiertas">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Categorias Cubiertas
+                </NavLink>
+            </li>
+
+
+
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-tasa-año-mes">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Tasa
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-ProductoCuota">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Producto Cuota
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="indice-CuotaVentas">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Cuota Ventas
+                </NavLink>
+            </li>
+
+
+
+        </ul>
+
+    </ul>
+</div>
+
+@code {
+    bool collapseNavMenu = true;
+
+    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

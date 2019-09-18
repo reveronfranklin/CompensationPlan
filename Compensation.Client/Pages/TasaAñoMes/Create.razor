@@ -1,0 +1,26 @@
+﻿@page "/crear-tasa-año-mes"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TasaAñoMesService tasaAñoMesService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Porcentaje Flat</h3>
+<form class="justify-content-center">
+
+    <FormularioTasaAñoMes TextoBoton="Crear" OnValidSubmit="@CrearTasaAñoMes" pCTasaAñoMes="@pCTasaAñoMes" />
+
+</form>
+
+
+@code {
+    PCTasaAñoMes pCTasaAñoMes  = new PCTasaAñoMes();
+
+    async Task CrearTasaAñoMes()
+    {
+
+
+        await tasaAñoMesService.InsertTasaAñoMesAsync(pCTasaAñoMes);
+        UriHelper.NavigateTo("indice-tasa-año-mes");
+    }
+}

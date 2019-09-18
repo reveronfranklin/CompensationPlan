@@ -1,0 +1,32 @@
+﻿@page  "/editar-flatcomision/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject FlatComisionService flatComisionService
+@inject NavigationManager UriHelper
+
+<h3>Editar Porcentaje Flat</h3>
+
+<FormularioFlatComision TextoBoton="Guardar" OnValidSubmit="@EditarFlatComision" flatComision="@flatComision" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    PCFlatComision flatComision = new PCFlatComision();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        flatComision = await flatComisionService.GetFlatComisionByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarFlatComision()
+    {
+
+
+        await flatComisionService.UpdateFlatComisionAsync(Id,flatComision);
+        UriHelper.NavigateTo("indice-FlatComision");
+    }
+
+}

@@ -1,0 +1,20 @@
+﻿@page "/crear-flatcomision"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject FlatComisionService flatComisionService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Porcentaje Flat</h3>
+<FormularioFlatComision TextoBoton="Crear" OnValidSubmit="@CrearFlatComision" flatComision="@flatComision"/>
+
+@code {
+    PCFlatComision flatComision = new PCFlatComision();
+
+    async Task CrearFlatComision() { 
+    
+
+        await flatComisionService.InsertFlatComisionAsync(flatComision);
+        UriHelper.NavigateTo("indice-FlatComision");
+    }
+}

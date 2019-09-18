@@ -1,0 +1,21 @@
+﻿@page "/crear-ProductoCuota"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject ProductoCuotaService poductoCuotaService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Porcentaje Flat</h3>
+<FormularioProductoCuota TextoBoton="Crear" OnValidSubmit="@CrearProductoCuota" pCProductoCuota="@pCProductoCuota" />
+
+@code {
+    PCProductoCuota pCProductoCuota = new PCProductoCuota();
+
+    async Task CrearProductoCuota()
+    {
+
+
+        await poductoCuotaService.InsertProductoCuotaAsync(pCProductoCuota);
+        UriHelper.NavigateTo("indice-ProductoCuota");
+    }
+}

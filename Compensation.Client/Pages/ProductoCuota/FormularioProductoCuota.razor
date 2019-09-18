@@ -1,0 +1,25 @@
+﻿<EditForm Model="@pCProductoCuota" OnValidSubmit="@OnValidSubmit">
+    <div class="form-field">
+        <label>Descripcion:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@pCProductoCuota.Descripcion" />
+            <ValidationMessage For="@(()=> pCProductoCuota.Descripcion)" />
+        </div>
+    </div>
+    <br>
+    
+    <br>
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+
+    [Parameter] public PCProductoCuota  pCProductoCuota { get; set; } = new PCProductoCuota();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

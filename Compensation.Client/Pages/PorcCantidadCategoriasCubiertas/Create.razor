@@ -1,0 +1,21 @@
+﻿@page "/crear-PorcCantidadCategoriasCubiertas"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PorcCantidadCategoriasCubiertasService  porcCantidadCategoriasCubiertasService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Porcentaje Flat</h3>
+<FormularioPorcCantidadCategoriasCubiertas TextoBoton="Crear" OnValidSubmit="@CrearPorcCantidadCategoriasCubiertas" pCPorcCantidadCategoriasCubiertas="@pCPorcCantidadCategoriasCubiertas" />
+
+@code {
+      PCPorcCantidadCategoriasCubiertas pCPorcCantidadCategoriasCubiertas = new PCPorcCantidadCategoriasCubiertas();
+
+    async Task CrearPorcCantidadCategoriasCubiertas()
+    {
+
+
+        await porcCantidadCategoriasCubiertasService.InsertPorcCantidadCategoriasCubiertasAsync(pCPorcCantidadCategoriasCubiertas);
+        UriHelper.NavigateTo("indice-PorcCantidadCategoriasCubiertas");
+    }
+}

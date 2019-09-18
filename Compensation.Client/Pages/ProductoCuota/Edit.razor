@@ -1,0 +1,32 @@
+﻿@page  "/editar-ProductoCuota/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject ProductoCuotaService poductoCuotaService
+@inject NavigationManager UriHelper
+
+<h3>Editar Porcentaje Flat</h3>
+
+<FormularioProductoCuota TextoBoton="Guardar" OnValidSubmit="@EditarProductoCuota" pCProductoCuota="@pCProductoCuota" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+      PCProductoCuota pCProductoCuota = new PCProductoCuota();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        pCProductoCuota = await poductoCuotaService.GetProductoCuotaByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarProductoCuota()
+    {
+
+
+        await poductoCuotaService.UpdateProductoCuotaAsync(Id, pCProductoCuota);
+        UriHelper.NavigateTo("indice-ProductoCuota");
+    }
+
+}
