@@ -15,10 +15,17 @@
         </div>
     </div>
     <div class="form-field">
-        <label>Porcentaje:</label>
+        <label>Porcentaje Vendedor:</label>
         <div>
             <InputNumber Class="form-control" @bind-Value="@pCRangoCumplimientoCuotaGeneral.Porcentaje" />
             <ValidationMessage For="@(()=> pCRangoCumplimientoCuotaGeneral.Porcentaje)" />
+        </div>
+    </div>
+    <div class="form-field">
+        <label>Porcentaje Gerente:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCRangoCumplimientoCuotaGeneral.PorcentajeGerente" />
+            <ValidationMessage For="@(()=> pCRangoCumplimientoCuotaGeneral.PorcentajeGerente)" />
         </div>
     </div>
     <br>

@@ -26,6 +26,8 @@ namespace Compensaction.Share
         CumplimientoCuotaGeneral = 4,
         CantidadCuotasCumplidas = 5,
         RecibosAnticipos = 6,
-
+        ComisionFlatGerente=7,
+        CumplimientoCuotaGeneralGerente = 8,
+        CantidadCuotasCumplidasGerente = 9,
     }
 }

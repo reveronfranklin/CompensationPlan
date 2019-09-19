@@ -18,6 +18,7 @@ namespace Compensaction.Share
 
         public string Ficha { get; set; }
 
+        public string Supervisor { get; set; }
 
     }
 }

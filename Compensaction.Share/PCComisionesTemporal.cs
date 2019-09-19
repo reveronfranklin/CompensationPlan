@@ -79,6 +79,22 @@ namespace Compensaction.Share
         public string Desde { get; set; }
 
         public string Hasta { get; set; }
+
+        public decimal PorcFlatGerente { get; set; }
+
+        public decimal ComisionRangoCumplimientoCuotaGeneralGerente { get; set; }
+
+        public decimal PorcRangoCumplimientoCuotaGeneralGerente { get; set; }
+
+        public decimal PorcCantidadCuotasCumplidasGerente { get; set; }
+
+        public decimal ComisionCantidadCuotasCumplidasGerente { get; set; }
+
+        public int CantidadCuotasCumplidasGerente { get; set; }
+
+        public decimal TotalVentasMesGerente { get; set; }
+
+        public decimal TotalCuotaMesGerente { get; set; }
     }
 
 }

@@ -33,8 +33,9 @@ namespace Compensation.Api
         public DbSet<PCTasaAñoMes> PCTasaAñoMes { get; set; }
         public DbSet<PCResumenOficinaTemporal> PCResumenOficinaTemporal { get; set; }
         public DbSet<PCProductoCuota> PCProductoCuota { get; set; }
-
+        public DbSet<PCCuotaVentasGerente> PCCuotaVentasGerente { get; set; }
         
+
         public CompensationDbContext(DbContextOptions<CompensationDbContext> options): base(options){}
 
         public CompensationDbContext()

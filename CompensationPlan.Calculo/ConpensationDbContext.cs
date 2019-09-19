@@ -31,7 +31,7 @@ namespace CompensationPlan.Calculo
         public DbSet<PCTasaAñoMes> PCTasaAñoMes { get; set; }
         public DbSet<PCResumenOficinaTemporal> PCResumenOficinaTemporal { get; set; }
         public DbSet<PCProductoCuota> PCProductoCuota { get; set; }
-
+        public DbSet<PCCuotaVentasGerente> PCCuotaVentasGerente { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

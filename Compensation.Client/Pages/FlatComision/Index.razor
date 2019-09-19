@@ -24,24 +24,24 @@ else
                 <th></th>
                 <th>Id</th>
                 <th>Descripcion</th>
-                <th>Porcentaje</th>
-
+                <th>Porcentaje Vendedor</th>
+                <th>Porcentaje Gerente</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in flatComision)
             {
-                <tr>
-                    <td>
-                        <a class="btn btn-success" href="editar-flatcomision/@item.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
-                    </td>
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-flatcomision/@item.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                </td>
 
-                    <td>@item.Id</td>
-                    <td>@item.Descripcion</td>
-                    <td>@item.Porcentaje</td>
-
-                </tr>
+                <td>@item.Id</td>
+                <td>@item.Descripcion</td>
+                <td>@item.Porcentaje</td>
+                <td>@item.PorcentajeGerente</td>
+            </tr>
             }
         </tbody>
     </table>

@@ -42,7 +42,7 @@ namespace Compensaction.Share
 
         public string TasaUsdString { get; set; }
 
-
+        public string Supervisor { get; set; }
 
     }
 }

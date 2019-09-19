@@ -8,10 +8,17 @@
     </div>
     <br>
     <div class="form-field">
-        <label>Porcentaje:</label>
+        <label>Porcentaje Vendedor:</label>
         <div>
             <InputNumber Class="form-control" @bind-Value="@pCPorcCantidadCategoriasCubiertas.Porcentaje" />
             <ValidationMessage For="@(()=> pCPorcCantidadCategoriasCubiertas.Porcentaje)" />
+        </div>
+    </div>
+    <div class="form-field">
+        <label>Porcentaje Gerente:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@pCPorcCantidadCategoriasCubiertas.PorcentajeGerente" />
+            <ValidationMessage For="@(()=> pCPorcCantidadCategoriasCubiertas.PorcentajeGerente)" />
         </div>
     </div>
     <br>
