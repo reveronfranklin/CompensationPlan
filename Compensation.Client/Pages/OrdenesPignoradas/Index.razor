@@ -1,0 +1,86 @@
+﻿@page "/indice-OrdenesPignoradas"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject OrdenesPignoradasService ordenesPignoradasService
+@inject IJSRuntime JS
+
+<h3>Ordenes Pignoradas</h3>
+<div>
+    <a class="btn btn-success" href="crear-OrdenesPignoradas">Crear</a>
+</div>
+@if (ordenesPignoradas == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (ordenesPignoradas.Length == 0)
+{
+    <tesxt>  No existen datos de Ordenes Pignoradas.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Orden</th>
+                <th>Cotizacion</th>
+                <th>Vendedor</th>
+                <th>Cliente</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ordenesPignoradas)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-OrdenesPignoradas/@item.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                </td>
+
+                <td>@item.Id</td>
+                <td>@item.Orden</td>
+                <td>@item.Cotizacion</td>
+                <td>@item.NombreVendedor</td>
+                <td>@item.NombreCliente</td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCOrdenesPignoradas[] ordenesPignoradas { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        ordenesPignoradas = await ordenesPignoradasService.getOrdenesPignoradasAsync();
+    }
+
+    async Task Borrar(int Id)
+    {
+        
+        var selecionado = ordenesPignoradas.First(f => f.Id == Id);
+        string Mensaje = $"deseas borrar esta orden: {selecionado.Orden}?";
+        if (await JS.Confirm("Confirmar",Mensaje,Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+         
+            await ordenesPignoradasService.DeleteOrdenesPignoradasAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
+
+}

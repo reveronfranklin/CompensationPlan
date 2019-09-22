@@ -4,20 +4,14 @@ using System.Text;
 
 namespace Compensaction.Share
 {
-    public class PCAñoMesOrden
+    public class PCOrdenesPignoradas
     {
 
         public int Id { get; set; }
 
-        public string Orden { get; set; }
+        public string  Orden { get; set; }
 
         public string Cotizacion { get; set; }
-
-        public int Año { get; set; }
-
-        public int Mes { get; set; }
-
-        public DateTime FechaOrden { get; set; }
 
         public string IdVendedor { get; set; }
 
@@ -26,7 +20,5 @@ namespace Compensaction.Share
         public string IdCliente { get; set; }
 
         public string NombreCliente { get; set; }
-
-
     }
 }

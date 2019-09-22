@@ -1,0 +1,42 @@
+﻿@page "/crear-OrdenesPignoradas"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject OrdenesPignoradasService ordenesPignoradasService
+@inject AñoMesordenService añoMesordenService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Orden Pignorada</h3>
+
+<h4 class="alert-danger">@Mensaje</h4>
+
+<FormularioOrdenesPignoradas TextoBoton="Crear" OnValidSubmit="@CrearOrdenesPignoradas" pCOrdenesPignoradas="@pCOrdenesPignoradas" />
+
+@code {
+    PCOrdenesPignoradas pCOrdenesPignoradas = new PCOrdenesPignoradas();
+    PCAñoMesOrden ordenAñoMes { get; set; }
+
+    string Mensaje = "";
+    async Task CrearOrdenesPignoradas()
+    {
+        Console.WriteLine("Orden: " + pCOrdenesPignoradas.Orden);
+        if (pCOrdenesPignoradas.Orden.Length != 10)
+        {
+            Mensaje = "Orden Invalida";
+            return;
+        }
+        else
+        {
+            ordenAñoMes = await añoMesordenService.GetAñoMesOrdenByIdAsync(pCOrdenesPignoradas.Orden);
+            if (ordenAñoMes == null)
+            {
+                Mensaje = "Orden Invalida";
+                return;
+
+            }
+        }
+        await ordenesPignoradasService.InsertOrdenesPignoradasAsync(pCOrdenesPignoradas);
+        UriHelper.NavigateTo("indice-OrdenesPignoradas");
+
+    }
+}

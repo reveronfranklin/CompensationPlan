@@ -1,0 +1,73 @@
+﻿@using Compensation.Client.Data
+@inject AñoMesordenService añoMesordenService
+    <EditForm Model="@pCOrdenesPignoradas" OnValidSubmit="@OnValidSubmit">
+        <div class="form-field">
+            <label>Orden:</label>
+            <div>
+                <InputText Class="form-control" @bind-Value="@pCOrdenesPignoradas.Orden" @onblur="GetDataOrden" />
+                <ValidationMessage For="@(()=> pCOrdenesPignoradas.Orden)" />
+            </div>
+        </div>
+        <br>
+        <div class="form-field">
+            <label>Cotizacion:</label>
+            <div>
+                <InputText Class="form-control" @bind-Value="@pCOrdenesPignoradas.Cotizacion" />
+                <ValidationMessage For="@(()=> pCOrdenesPignoradas.Cotizacion)" />
+            </div>
+        </div>
+        <br>
+        <div class="form-field">
+            <label>Vendedor:</label>
+            <div>
+                <InputText Class="form-control" @bind-Value="@pCOrdenesPignoradas.NombreVendedor" />
+                <ValidationMessage For="@(()=> pCOrdenesPignoradas.NombreVendedor)" />
+            </div>
+        </div>
+        <br>
+        <div class="form-field">
+            <label>Cliente:</label>
+            <div>
+                <InputText Class="form-control" @bind-Value="@pCOrdenesPignoradas.NombreCliente" />
+                <ValidationMessage For="@(()=> pCOrdenesPignoradas.NombreCliente)" />
+            </div>
+        </div>
+
+        <br>
+
+        <button type="submit" class="btn btn-success">@TextoBoton</button>
+        <DataAnnotationsValidator />
+    </EditForm>
+
+@code {
+
+
+    [Parameter] public PCOrdenesPignoradas pCOrdenesPignoradas { get; set; } = new PCOrdenesPignoradas();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    string nombreCliente = "";
+
+    PCAñoMesOrden ordenAñoMes { get; set; }
+
+    async Task GetDataOrden()
+    {
+        Console.WriteLine("Orden: " + pCOrdenesPignoradas.Orden);
+
+
+        ordenAñoMes = await añoMesordenService.GetAñoMesOrdenByIdAsync(pCOrdenesPignoradas.Orden);
+        if (ordenAñoMes!=null)
+        {
+            pCOrdenesPignoradas.Cotizacion = ordenAñoMes.Cotizacion;
+            pCOrdenesPignoradas.IdVendedor = ordenAñoMes.IdVendedor;
+            pCOrdenesPignoradas.NombreVendedor = ordenAñoMes.NombreVendedor;
+            pCOrdenesPignoradas.IdCliente = ordenAñoMes.IdCliente;
+            pCOrdenesPignoradas.NombreCliente = ordenAñoMes.NombreCliente;
+            nombreCliente = ordenAñoMes.NombreCliente;
+        }
+
+    }
+
+}

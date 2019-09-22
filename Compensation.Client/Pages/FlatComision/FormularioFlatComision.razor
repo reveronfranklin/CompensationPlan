@@ -15,14 +15,7 @@
         </div>
     </div>
     <br>
-    <div class="form-field">
-        <label>Porcentaje Gerente:</label>
-        <div>
-            <InputNumber Class="form-control" @bind-Value="@flatComision.PorcentajeGerente" />
-            <ValidationMessage For="@(()=> flatComision.PorcentajeGerente)" />
-        </div>
-    </div>
-    <br />
+
     <button type="submit" class="btn btn-success">@TextoBoton</button>
     <DataAnnotationsValidator />
 </EditForm>

@@ -24,10 +24,9 @@ namespace Compensation.Client
             services.AddSingleton<ResumenOficinaTemporalService>();
             services.AddSingleton<ProductoCuotaService>();
             services.AddSingleton<CuotaVentasService>();
-
+            services.AddSingleton<OrdenesPignoradasService>();
+            services.AddSingleton<AñoMesordenService>();
             
-
-
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalso>();
         }

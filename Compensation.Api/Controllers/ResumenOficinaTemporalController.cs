@@ -29,9 +29,18 @@ namespace Compensation.Api.Controllers
         public async Task<ActionResult<IEnumerable<PCResumenOficinaTemporal>>> GetPCResumenOficinaTemporal()
         {
 
-
-
-            return await _context.PCResumenOficinaTemporal.ToListAsync();
+            try
+            {
+                var resumen = await _context.PCResumenOficinaTemporal.ToListAsync();
+                return resumen;
+            }
+            catch (Exception e)
+            {
+                var a = e.Message;
+                throw;
+            }
+           
+           
 
 
         }

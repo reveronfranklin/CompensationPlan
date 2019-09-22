@@ -16,8 +16,7 @@ namespace Compensaction.Share
         [Required]
         public decimal Porcentaje { get; set; }
 
-        [Required]
-        public decimal PorcentajeGerente { get; set; }
+
 
     }
 }

@@ -1,0 +1,74 @@
+﻿@page  "/editar-OrdenesPignoradas/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject OrdenesPignoradasService ordenesPignoradasService
+@inject AñoMesordenService añoMesordenService
+@inject NavigationManager UriHelper
+
+<h3>Ordenes Pignoradas</h3>
+<h4 class="alert-danger">@Mensaje</h4>
+
+<FormularioOrdenesPignoradas TextoBoton="Guardar" OnValidSubmit="@EditarOrdenesPignoradas" pCOrdenesPignoradas="@pCOrdenesPignoradas" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    PCOrdenesPignoradas pCOrdenesPignoradas = new PCOrdenesPignoradas();
+
+    PCAñoMesOrden ordenAñoMes { get; set; }
+
+    string Mensaje = "";
+
+    protected async override Task OnParametersSetAsync()
+    {
+        pCOrdenesPignoradas = await ordenesPignoradasService.GetOrdenesPignoradasByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarOrdenesPignoradas()
+    {
+        Console.WriteLine("Orden: " + pCOrdenesPignoradas.Orden);
+        if (pCOrdenesPignoradas.Orden.Length!=10)
+        {
+            Mensaje = "Orden Invalida";
+            return;
+        }
+        else
+        {
+            ordenAñoMes = await añoMesordenService.GetAñoMesOrdenByIdAsync(pCOrdenesPignoradas.Orden);
+            if (ordenAñoMes == null)
+            {
+               Mensaje = "Orden Invalida";
+               return;
+
+            }
+        }
+        Mensaje = "";
+        await GetDataOrden();
+        await ordenesPignoradasService.UpdateOrdenesPignoradasAsync(Id, pCOrdenesPignoradas);
+        UriHelper.NavigateTo("indice-OrdenesPignoradas");
+    }
+    async Task GetDataOrden()
+    {
+
+        ordenAñoMes = await añoMesordenService.GetAñoMesOrdenByIdAsync(pCOrdenesPignoradas.Orden);
+        if (ordenAñoMes != null)
+        {
+            pCOrdenesPignoradas.Cotizacion = ordenAñoMes.Cotizacion;
+            pCOrdenesPignoradas.IdVendedor = ordenAñoMes.IdVendedor;
+            pCOrdenesPignoradas.NombreVendedor = ordenAñoMes.NombreVendedor;
+            pCOrdenesPignoradas.IdCliente = ordenAñoMes.IdCliente;
+            pCOrdenesPignoradas.NombreCliente = ordenAñoMes.NombreCliente;
+
+        }
+        else
+        {
+            Mensaje = "Orden Invalida";
+            return;
+        }
+
+    }
+
+}
