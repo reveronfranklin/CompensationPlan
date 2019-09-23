@@ -101,5 +101,23 @@ namespace Compensation.Api.Controllers
 
         }
 
+
+        // GET: api/Historico/5
+        [HttpGet("GetTemporalRecibo/{id}")]
+        public async Task<ActionResult<IEnumerable<PCTemporal>>> GetTemporalRecibo(string id)
+        {
+            var resumen = await _context.PCTemporal.Where(r => r.DocumentoString == id).ToListAsync();
+
+            if (resumen == null)
+            {
+                return NotFound();
+            }
+
+            return resumen;
+
+
+
+        }
+
     }
 }

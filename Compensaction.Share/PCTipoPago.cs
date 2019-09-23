@@ -31,5 +31,8 @@ namespace Compensaction.Share
         CantidadCuotasCumplidasGerente = 9,
         ComisionFlatClienteNuevoReactivado=10,
         ComisionFlatClienteNuevoReactivadoGerente=11,
+
+
+
     }
 }

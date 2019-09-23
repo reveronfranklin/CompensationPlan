@@ -13,5 +13,8 @@ namespace Compensaction.Share
         public decimal PorcCunplimiento { get; set; }
         public int DiasClienteNuevo { get; set; }
         public int DiasClienteReactivado { get; set; }
+        public decimal UmbralOrdenesPignoradas { get; set; }
+        public int DiasPagoDoble { get; set; }
     }
+
 }

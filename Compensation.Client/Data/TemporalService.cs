@@ -44,8 +44,15 @@ namespace Compensation.Client.Data
             return JsonConvert.DeserializeObject<PCResumenComisionTemporal[]>(json);
         }
 
-        
 
+        public async Task<PCTemporal[]> GetTemporalByReciboAsync(string id)
+        {
+
+
+            HttpClient http = new HttpClient();
+            var json = await http.GetStringAsync($"{baseUrl}api/Temporal/GetTemporalRecibo/{id}");
+            return JsonConvert.DeserializeObject<PCTemporal[]>(json);
+        }
 
 
 

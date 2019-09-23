@@ -6,6 +6,7 @@
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+  
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -35,6 +36,13 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
+            <NavLink class="nav-link" href="indice-TemporalRecibo">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Temporal Por Recibo
+            </NavLink>
+        </li>
+        
+
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="indice-historico">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Historico Comision
             </NavLink>
@@ -49,70 +57,18 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Historico por Recibo
             </NavLink>
         </li>
-        <ul class="nav flex-column">
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-periodo">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Periodo Pago
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-FlatComision">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> % Flat Comision
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-FlatComisionGerente">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span>% Flat Gerente
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-RangoCumplimientoCuotaGeneral">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span>Cuota General
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-PorcCantidadCategoriasCubiertas">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span>Categorias Cubiertas
-                </NavLink>
-            </li>
 
-
-
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-tasa-año-mes">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Tasa
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-ProductoCuota">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Producto Cuota
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-CuotaVentas">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span>Cuota Ventas
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="indice-OrdenesPignoradas">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span>Pignoradas
-                </NavLink>
-            </li>
-
-
-
-        </ul>
 
     </ul>
-</div>
+    </div>
 
-@code {
-    bool collapseNavMenu = true;
+    @code {
+        bool collapseNavMenu = true;
 
-    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+        string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
     }
-}
