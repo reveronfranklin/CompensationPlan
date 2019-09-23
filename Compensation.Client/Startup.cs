@@ -26,6 +26,7 @@ namespace Compensation.Client
             services.AddSingleton<CuotaVentasService>();
             services.AddSingleton<OrdenesPignoradasService>();
             services.AddSingleton<AñoMesordenService>();
+            services.AddSingleton<FlatComisionGerenteService>();
             
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalso>();

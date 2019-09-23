@@ -1,0 +1,105 @@
+﻿<EditForm Model="@flatComisionGerente" OnValidSubmit="@OnValidSubmit">
+    <div class="form-field">
+        <label>Tipo Producto:</label>
+        <div>
+            <select class="custom-select" id="flatDrop" @onchange="@FlatSelectionChanged" value="@SelectedValue">
+                <option value="">-- Select Tipo Flat --</option>
+                @if (flatComision != null)
+                {
+                    @foreach (var item in flatComision)
+                    {
+                        <option value="@item.Id">@item.Descripcion</option>
+                    }
+                }
+
+
+            </select>
+
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Gerente:</label>
+        <select class="custom-select" id="vendedorDrop" @onchange="@VendedorSelectionChanged" value="@SelectedValueGerente">
+            <option value="">-- Select Vendedor --</option>
+            @if (vendedorList != null)
+            {
+                @foreach (var itemVendedor in vendedorList)
+                {
+                    <option value="@itemVendedor.Codigo">@itemVendedor.Nombre</option>
+                }
+            }
+
+        </select>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Porcentaje Gerente:</label>
+        <div>
+           
+            <InputNumber Class="form-control" @bind-Value="@flatComisionGerente.Porcentaje" />
+            <ValidationMessage For="@(()=> flatComisionGerente.Porcentaje)" />
+        </div>
+    </div>
+    <br>
+
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+    [Parameter] public PCFlatComision[] flatComision { get; set; }
+
+    [Parameter] public PCVendedor[] vendedorList { get; set; }
+
+    [Parameter] public PCFlatComisionGerente flatComisionGerente { get; set; } = new PCFlatComisionGerente();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    public PCFlatComision flatComisionSelected { get; set; } = new PCFlatComision();
+
+    public PCVendedor vendedorSelected { get; set; } = new PCVendedor();
+
+
+
+    int SelectedValue = 0;
+    string SelectedValueGerente = "";
+
+    protected async override Task OnParametersSetAsync()
+    {
+        SelectedValue = flatComisionGerente.IdFlatComision;
+        SelectedValueGerente = flatComisionGerente.Gerente;
+
+    }
+
+    async Task FlatSelectionChanged(ChangeEventArgs e)
+    {
+
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            flatComisionGerente.IdFlatComision = id;
+            SelectedValue = id;
+            flatComisionSelected = flatComision.Where(f => f.Id == id).FirstOrDefault();
+            flatComisionGerente.DescripcionCategoria = flatComisionSelected.Descripcion;
+        }
+
+    }
+
+
+    async Task VendedorSelectionChanged(ChangeEventArgs e)
+    {
+        string id = e.Value.ToString();
+
+        flatComisionGerente.Gerente = id;
+        vendedorSelected = vendedorList.Where(v => v.Codigo == flatComisionGerente.Gerente).FirstOrDefault();
+        flatComisionGerente.NombreGerente = vendedorSelected.Nombre;
+
+
+    }
+
+
+
+}

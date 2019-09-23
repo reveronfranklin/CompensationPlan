@@ -20,5 +20,6 @@ namespace Compensaction.Share
 
         public string Supervisor { get; set; }
 
+        public bool Gerente { get; set; }
     }
 }

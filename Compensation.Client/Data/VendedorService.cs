@@ -13,6 +13,7 @@ namespace Compensation.Client.Data
     {
         string baseUrl = Helper.BaseUrl;
         PCVendedor[] vendedorList { get; set; }
+        PCVendedor[] gerenteList { get; set; }
         public async Task<PCVendedor[]> GetVendedorAsync(int idOficina)
         {
            
@@ -22,7 +23,15 @@ namespace Compensation.Client.Data
             return vendedorList.Where(v => v.CodOficina == idOficina).ToArray();
         }
 
-       
+        public async Task<PCVendedor[]> GetGerenteAsync()
+        {
+
+            HttpClient http = new HttpClient();
+            var json = await http.GetStringAsync($"{baseUrl}api/Vendedor/GetGerente");
+            vendedorList = JsonConvert.DeserializeObject<PCVendedor[]>(json);
+            return vendedorList.ToArray();
+        }
+
 
 
     }

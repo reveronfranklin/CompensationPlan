@@ -1,10 +1,81 @@
 ﻿@page "/indice-FlatComisionGerente"
 @inject HttpClient Http
 @using Compensation.Client.Data
-@inject FlatComisionService flatComisionService
+@inject FlatComisionGerenteService flatComisionGerenteService
 @inject IJSRuntime JS
 <h3>% Flat Comision Gerente</h3>
+<div>
+    <a class="btn btn-success" href="crear-flatcomision">Nuevo Porcentaje</a>
+</div>
+@if (flatComision == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (flatComision.Length == 0)
+{
+    <tesxt>  No existen datos de % Comision.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Gerente</th>
+                <th>Descripcion</th>
+                <th>Porcentaje</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in flatComision)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-flatcomisionGerente/@item.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                </td>
+
+                <td>@item.Id</td>
+                <td>@item.Gerente-@item.NombreGerente</td>
+                <td>@item.DescripcionCategoria</td>
+                <td>@item.Porcentaje</td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+    PCFlatComisionGerente[] flatComision { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        flatComision = await flatComisionGerenteService.getFlatComisionAsync();
+    }
+
+    async Task Borrar(int Id)
+    {
+
+        var selecionado = flatComision.First(f => f.Id == Id);
+        string Mensaje = $"deseas borrar este Porcentaje: {selecionado.DescripcionCategoria}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await flatComisionGerenteService.DeleteFlatComisionAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
 }

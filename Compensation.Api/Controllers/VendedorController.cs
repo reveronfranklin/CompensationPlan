@@ -33,6 +33,16 @@ namespace Compensation.Api.Controllers
 
         }
 
+        // GET: api/Vendedor
+        [HttpGet("GetGerente")]
+        public async Task<ActionResult<IEnumerable<PCVendedor>>> GetGerente()
+        {
+            _context.Database.ExecuteSqlCommand("PCSpVendedor @p0", "");
+
+            return await _context.PCVendedor.Where(v => v.Activo == true && v.Gerente== true).ToListAsync();
+
+
+        }
 
     }
 }

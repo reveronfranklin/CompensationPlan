@@ -1,0 +1,46 @@
+﻿@page  "/editar-flatcomisionGerente/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject FlatComisionGerenteService flatComisionGerenteService
+@inject FlatComisionService flatComisionService
+@inject VendedorService vendedorService
+@inject NavigationManager UriHelper
+
+<h3>Editar Porcentaje Flat Gerente</h3>
+
+<FormularioFlatComisionGerente TextoBoton="Guardar" OnValidSubmit="@EditarFlatComision" flatComisionGerente="@flatComisionGerente" flatComision="@flatComision" vendedorList="@gerentes"/>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    PCFlatComisionGerente flatComisionGerente = new PCFlatComisionGerente();
+    PCFlatComision[] flatComision { get; set; }
+    PCVendedor[] gerentes { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        flatComisionGerente = await flatComisionGerenteService.GetFlatComisionByIdAsync(Id);
+        await GetData();
+        await GetDataGerente();
+    }
+
+    async Task GetData()
+    {
+        flatComision = await flatComisionService.getFlatComisionAsync();
+    }
+
+    async Task GetDataGerente()
+    {
+        gerentes = await vendedorService.GetGerenteAsync();
+    }
+
+
+    async Task EditarFlatComision()
+    {
+
+
+        await flatComisionGerenteService.UpdateFlatComisionAsync(Id, flatComisionGerente);
+        UriHelper.NavigateTo("indice-FlatComisionGerente");
+    }
+
+}
