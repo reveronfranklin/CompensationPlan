@@ -95,6 +95,9 @@ namespace Compensaction.Share
         public decimal TotalVentasMesGerente { get; set; }
 
         public decimal TotalCuotaMesGerente { get; set; }
+
+        public decimal BsComisionNuevoReactivado { get; set; }
+        public decimal BsComisionNuevoReactivadoGerente { get; set; }
     }
 
 }

@@ -1,0 +1,59 @@
+﻿@inject NavigationManager UriHelper
+    <select class="custom-select custom-select-lg mb-3" @onchange="@MenuSelectionChanged">
+        <option selected>Maestros</option>
+        <option value="1">Periodo</option>
+        <option value="2">% Flat Vendedor</option>
+        <option value="3">% Flat Gerente</option>
+        <option value="4">Cuota General</option>
+        <option value="5">Categorias Cubiertas</option>
+        <option value="6">Tasa</option>
+        <option value="7">Producto Cuota</option>
+        <option value="8">Cuota Ventas</option>
+        <option value="9">Ordenes ignoradas</option>
+    </select>
+
+@code{
+
+
+    async Task MenuSelectionChanged(ChangeEventArgs e)
+    {
+        string id = e.Value.ToString();
+        if (id == "1")
+        {
+            UriHelper.NavigateTo("indice-periodo");
+        }
+          if (id == "2")
+        {
+            UriHelper.NavigateTo("indice-FlatComision");
+        }
+        if (id == "3")
+        {
+            UriHelper.NavigateTo("indice-FlatComisionGerente");
+        }
+         if (id == "4")
+        {
+            UriHelper.NavigateTo("indice-RangoCumplimientoCuotaGeneral");
+        }
+        if (id == "5")
+        {
+            UriHelper.NavigateTo("indice-PorcCantidadCategoriasCubiertas");
+        }
+        if (id == "6")
+        {
+            UriHelper.NavigateTo("indice-tasa-año-mes");
+        }
+        if (id == "7")
+        {
+            UriHelper.NavigateTo("indice-ProductoCuota");
+        }
+         if (id == "8")
+        {
+            UriHelper.NavigateTo("indice-CuotaVentas");
+        }
+          if (id == "9")
+        {
+            UriHelper.NavigateTo("indice-OrdenesPignoradas");
+        }
+        
+    }
+}

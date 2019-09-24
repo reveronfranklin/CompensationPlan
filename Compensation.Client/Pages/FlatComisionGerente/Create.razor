@@ -1,0 +1,44 @@
+﻿@page "/crear-flatcomisionGerente"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject FlatComisionGerenteService flatComisionGerenteService
+@inject FlatComisionService flatComisionService
+@inject VendedorService vendedorService
+@inject NavigationManager UriHelper
+
+
+<h3>Crear Porcentaje Flat Gerente</h3>
+<FormularioFlatComisionGerente TextoBoton="Guardar" OnValidSubmit="@CrearFlatComisionGerente" flatComisionGerente="@flatComisionGerente" flatComision="@flatComision" vendedorList="@gerentes" />
+
+@code {
+    
+
+    PCFlatComisionGerente flatComisionGerente = new PCFlatComisionGerente();
+    PCFlatComision[] flatComision { get; set; }
+    PCVendedor[] gerentes { get; set; }
+
+     protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+        await GetDataGerente();
+    }
+
+    async Task GetData()
+    {
+        flatComision = await flatComisionService.getFlatComisionAsync();
+    }
+
+    async Task GetDataGerente()
+    {
+        gerentes = await vendedorService.GetGerenteAsync();
+    }
+
+    async Task CrearFlatComisionGerente()
+    {
+
+
+        await flatComisionGerenteService.InsertFlatComisionAsync(flatComisionGerente);
+        UriHelper.NavigateTo("indice-FlatComisionGerente");
+    }
+
+}

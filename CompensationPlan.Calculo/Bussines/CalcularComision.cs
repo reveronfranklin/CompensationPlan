@@ -233,8 +233,9 @@ namespace CompensationPlan.Calculo.Bussines
             pCComisionesTemporal = _context.PCComisionesTemporal.Find(IdTabla);
             if (pCComisionesTemporal != null)
             {
+                bool clientePagaComisionDoble = ClientePagaComisionDoble(pCComisionesTemporal.IdCliente, (DateTime)GetfechaOrden(pCComisionesTemporal.Orden.ToString()));
 
-                if (pCComisionesTemporal.Documento == 253810)
+                if (pCComisionesTemporal.Documento == 253980)
                 {
                     var a = 1;
                     Console.WriteLine(a);
@@ -251,12 +252,18 @@ namespace CompensationPlan.Calculo.Bussines
                     var comisionFlat = ComisionFlat(idSubcategoria, pCComisionesTemporal.MontoReal);
                     pCComisionesTemporal.BsComision = comisionFlat.Comision;
                     pCComisionesTemporal.PorcFlat = comisionFlat.Porcentaje;
-
+                    if (clientePagaComisionDoble)
+                    {
+                        pCComisionesTemporal.BsComisionNuevoReactivado = comisionFlat.Comision;
+                    }
                     //Comision Flat Gerente
                     var comisionFlatGerente = ComisionFlatGerente(idSubcategoria, pCComisionesTemporal.MontoReal, Gerente(pCComisionesTemporal.IdVendedor));
                     pCComisionesTemporal.BsComisionGrte = comisionFlatGerente.Comision;
                     pCComisionesTemporal.PorcFlatGerente = comisionFlatGerente.Porcentaje;
-
+                    if (clientePagaComisionDoble)
+                    {
+                        pCComisionesTemporal.BsComisionNuevoReactivadoGerente = comisionFlatGerente.Comision;
+                    }
 
                     //Cumplimiento Cuota General Vendedor
                     var comisionCumplimientoCuotaGeneral = ComisionCumplimientoCuotaGeneral(añoMesOrden.Año, añoMesOrden.Mes, pCComisionesTemporal.IdVendedor.Trim(), pCComisionesTemporal.BsComision);
@@ -444,7 +451,19 @@ namespace CompensationPlan.Calculo.Bussines
             pCTipoPago = _context.PCTipoPago.Where(t => t.Id == pCComisionesTemporal.IdTipoPago).FirstOrDefault();
             if (pCTipoPago.FlagCalcular)
             {
-                //Se Crea Registro de Comision Flat (TipoPagoEnum.ComisionFlat)
+
+
+                /*ComisionFlat = 3,
+                CumplimientoCuotaGeneral = 4,
+                CantidadCuotasCumplidas = 5,
+                RecibosAnticipos = 6,
+                ComisionFlatGerente = 7,
+                CumplimientoCuotaGeneralGerente = 8,
+                CantidadCuotasCumplidasGerente = 9,
+                ComisionFlatClienteNuevoReactivado = 10,
+                ComisionFlatClienteNuevoReactivadoGerente = 11,*/
+
+                //Se Crea Registro de Comision Flat (TipoPagoEnum.ComisionFlat=3)
                 pCTemporalCF.Id = Guid.NewGuid().ToString();
                 pCTemporalCF.IdCliente = pCComisionesTemporal.IdCliente;
                 pCTemporalCF.Transaccion = pCComisionesTemporal.Transaccion;
@@ -467,7 +486,7 @@ namespace CompensationPlan.Calculo.Bussines
                 pCTemporalCF.PorcCantidadCuotasCumplidas = 0;
                 pCTemporalCF.ComisionCantidadCuotasCumplidas = 0;
                 pCTemporalCF.FechaRegistro = DateTime.UtcNow;
-                pCTemporalCF.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalCF.IdTipoPago);
+                pCTemporalCF.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.ComisionFlat);
                 pCTemporalCF.MontoString = ToCurrencyString(pCTemporalCF.BsComision);
                 pCTemporalCF.OrdenString = pCTemporalCF.Orden.ToString();
                 pCTemporalCF.DocumentoString = pCTemporalCF.Documento.ToString();
@@ -478,7 +497,7 @@ namespace CompensationPlan.Calculo.Bussines
                     _context.PCTemporal.Add(pCTemporalCF);
                 }
 
-                //Se Crea Registro de Comision Flat Clente Nuevo o Reactivado(TipoPagoEnum.ComisionFlatClienteNuevoReactivado)
+                //Se Crea Registro de Comision Flat Clente Nuevo o Reactivado(TipoPagoEnum.ComisionFlatClienteNuevoReactivado=10)
                 if (clientePagaComisionDoble && ordenPignorada == false)
                 {
                     pCTemporalCFNuevo.Id = Guid.NewGuid().ToString();
@@ -503,7 +522,7 @@ namespace CompensationPlan.Calculo.Bussines
                     pCTemporalCFNuevo.PorcCantidadCuotasCumplidas = 0;
                     pCTemporalCFNuevo.ComisionCantidadCuotasCumplidas = 0;
                     pCTemporalCFNuevo.FechaRegistro = DateTime.UtcNow;
-                    pCTemporalCFNuevo.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalCFNuevo.IdTipoPago);
+                    pCTemporalCFNuevo.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.ComisionFlatClienteNuevoReactivado);
                     pCTemporalCFNuevo.MontoString = ToCurrencyString(pCTemporalCFNuevo.BsComision);
                     pCTemporalCFNuevo.OrdenString = pCTemporalCFNuevo.Orden.ToString();
                     pCTemporalCFNuevo.DocumentoString = pCTemporalCFNuevo.Documento.ToString();
@@ -513,11 +532,12 @@ namespace CompensationPlan.Calculo.Bussines
                     {
                         _context.PCTemporal.Add(pCTemporalCFNuevo);
                     }
+
                 }
 
 
 
-                //Se Crea Registro de Comision Flat Gerente (TipoPagoEnum.ComisionFlatGerente)
+                //Se Crea Registro de Comision Flat Gerente (TipoPagoEnum.ComisionFlatGerente=7)
                 pCTemporalFG.Id = Guid.NewGuid().ToString();
                 pCTemporalFG.IdCliente = pCComisionesTemporal.IdCliente;
                 pCTemporalFG.Transaccion = pCComisionesTemporal.Transaccion;
@@ -540,7 +560,7 @@ namespace CompensationPlan.Calculo.Bussines
                 pCTemporalCF.PorcCantidadCuotasCumplidas = 0;
                 pCTemporalFG.ComisionCantidadCuotasCumplidas = 0;
                 pCTemporalFG.FechaRegistro = DateTime.UtcNow;
-                pCTemporalFG.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalFG.IdTipoPago);
+                pCTemporalFG.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.ComisionFlatGerente);
                 pCTemporalFG.MontoString = ToCurrencyString(pCTemporalFG.BsComision);
                 pCTemporalFG.OrdenString = pCTemporalFG.Orden.ToString();
                 pCTemporalFG.DocumentoString = pCTemporalFG.Documento.ToString();
@@ -551,7 +571,7 @@ namespace CompensationPlan.Calculo.Bussines
                     _context.PCTemporal.Add(pCTemporalFG);
                 }
 
-                //Se Crea Registro de Comision Flat Gerente Cliente nuevo(TipoPagoEnum.ComisionFlatClienteNuevoReactivadoGerente)
+                //Se Crea Registro de Comision Flat Gerente Cliente nuevo(TipoPagoEnum.ComisionFlatClienteNuevoReactivadoGerente=11)
                 if (clientePagaComisionDoble && ordenPignorada == false)
                 {
                     pCTemporalFGNuevo.Id = Guid.NewGuid().ToString();
@@ -576,7 +596,7 @@ namespace CompensationPlan.Calculo.Bussines
                     pCTemporalFGNuevo.PorcCantidadCuotasCumplidas = 0;
                     pCTemporalFGNuevo.ComisionCantidadCuotasCumplidas = 0;
                     pCTemporalFGNuevo.FechaRegistro = DateTime.UtcNow;
-                    pCTemporalFG.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalFG.IdTipoPago);
+                    pCTemporalFGNuevo.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.ComisionFlatClienteNuevoReactivadoGerente);
                     pCTemporalFGNuevo.MontoString = ToCurrencyString(pCTemporalFGNuevo.BsComision);
                     pCTemporalFGNuevo.OrdenString = pCTemporalFGNuevo.Orden.ToString();
                     pCTemporalFGNuevo.DocumentoString = pCTemporalFGNuevo.Documento.ToString();
@@ -592,7 +612,7 @@ namespace CompensationPlan.Calculo.Bussines
                
                 if (ordenPignorada==false)
                 {
-                    //Se Crea Registro de Comision Rango Cumplimiento Cuota General (TipoPagoEnum.CumplimientoCuotaGeneral)
+                    //Se Crea Registro de Comision Rango Cumplimiento Cuota General (TipoPagoEnum.CumplimientoCuotaGeneral=4)
                     pCTemporalCC.Id = Guid.NewGuid().ToString();
                     pCTemporalCC.IdCliente = pCComisionesTemporal.IdCliente;
                     pCTemporalCC.Transaccion = pCComisionesTemporal.Transaccion;
@@ -616,7 +636,7 @@ namespace CompensationPlan.Calculo.Bussines
                     pCTemporalCC.CantidadCuotasCumplidas = 0;
                     pCTemporalCC.PorcCantidadCuotasCumplidas = 0;
                     pCTemporalCC.ComisionCantidadCuotasCumplidas = 0;
-                    pCTemporalCC.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalCC.IdTipoPago);
+                    pCTemporalCC.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.CumplimientoCuotaGeneral);
                     pCTemporalCC.MontoString = ToCurrencyString(pCTemporalCC.BsComision);
                     pCTemporalCC.OrdenString = pCTemporalCC.Orden.ToString();
                     pCTemporalCC.DocumentoString = pCTemporalCC.Documento.ToString();
@@ -650,7 +670,7 @@ namespace CompensationPlan.Calculo.Bussines
                     pCTemporalCG.CantidadCuotasCumplidas = 0;
                     pCTemporalCG.PorcCantidadCuotasCumplidas = 0;
                     pCTemporalCG.ComisionCantidadCuotasCumplidas = 0;
-                    pCTemporalCG.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalCG.IdTipoPago);
+                    pCTemporalCG.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.CumplimientoCuotaGeneralGerente);
                     pCTemporalCG.MontoString = ToCurrencyString(pCTemporalCG.BsComision);
                     pCTemporalCG.OrdenString = pCTemporalCG.Orden.ToString();
                     pCTemporalCG.DocumentoString = pCTemporalCG.Documento.ToString();
@@ -662,7 +682,7 @@ namespace CompensationPlan.Calculo.Bussines
                         _context.PCTemporal.Add(apagar);
                     }
 
-                    //Se Crea Registro de Comision Cantidad cuotas cumplidas (TipoPagoEnum.CantidadCuotasCumplidas)
+                    //Se Crea Registro de Comision Cantidad cuotas cumplidas (TipoPagoEnum.CantidadCuotasCumplidas=5)
                     pCTemporalCA.Id = Guid.NewGuid().ToString();
                     pCTemporalCA.IdCliente = pCComisionesTemporal.IdCliente;
                     pCTemporalCA.Transaccion = pCComisionesTemporal.Transaccion;
@@ -685,7 +705,7 @@ namespace CompensationPlan.Calculo.Bussines
                     pCTemporalCA.PeriodoDesde = periodoDesde;
                     pCTemporalCA.PeriodoHasta = periodoHasta;
                     pCTemporalCA.FechaRegistro = DateTime.UtcNow;
-                    pCTemporalCA.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalCA.IdTipoPago);
+                    pCTemporalCA.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.CantidadCuotasCumplidas);
                     pCTemporalCA.MontoString = ToCurrencyString(pCTemporalCA.BsComision);
                     pCTemporalCA.OrdenString = pCTemporalCA.Orden.ToString();
                     pCTemporalCA.DocumentoString = pCTemporalCA.Documento.ToString();
@@ -697,7 +717,7 @@ namespace CompensationPlan.Calculo.Bussines
                         _context.PCTemporal.Add(apagar);
                     }
 
-                    //Se Crea Registro de Comision Cantidad cuotas cumplidas Gerente(TipoPagoEnum.CantidadCuotasCumplidasGerente)
+                    //Se Crea Registro de Comision Cantidad cuotas cumplidas Gerente(TipoPagoEnum.CantidadCuotasCumplidasGerente=9)
                     pCTemporalCB.Id = Guid.NewGuid().ToString();
                     pCTemporalCB.IdCliente = pCComisionesTemporal.IdCliente;
                     pCTemporalCB.Transaccion = pCComisionesTemporal.Transaccion;
@@ -720,7 +740,7 @@ namespace CompensationPlan.Calculo.Bussines
                     pCTemporalCB.PeriodoDesde = periodoDesde;
                     pCTemporalCB.PeriodoHasta = periodoHasta;
                     pCTemporalCB.FechaRegistro = DateTime.UtcNow;
-                    pCTemporalCB.DescripcionTipoPago = GetDesripcionTipoPago(pCTemporalCA.IdTipoPago);
+                    pCTemporalCB.DescripcionTipoPago = GetDesripcionTipoPago((int)TipoPagoEnum.CantidadCuotasCumplidasGerente);
                     pCTemporalCB.MontoString = ToCurrencyString(pCTemporalCB.BsComision);
                     pCTemporalCB.OrdenString = pCTemporalCB.Orden.ToString();
                     pCTemporalCB.DocumentoString = pCTemporalCB.Documento.ToString();
@@ -1138,16 +1158,16 @@ namespace CompensationPlan.Calculo.Bussines
             PCSysFile pCSysfile = new PCSysFile();
             pCSysfile = _context.PCSysfile.FirstOrDefault();
             int DiasNuevo = pCSysfile.DiasClienteNuevo;
-            int DiasReactivado = pCSysfile.DiasClienteReactivado;
+            int DiasReactivado = pCSysfile.DiasPagoDoble;
             bool result = false;
-            DateTime? FechaUltimaCompra;
+            DateTime? FechaReactivacion;
             DateTime? FechaApertura;
             PCCliente pCCliente = new PCCliente();
 
             pCCliente = _context.PCCliente.Where(t => t.Cliente == cliente).FirstOrDefault();
             if (pCCliente != null)
             {
-                FechaUltimaCompra = pCCliente.F_Ultm_Compra;
+                FechaReactivacion = pCCliente.FechaReactivado;
                 FechaApertura = pCCliente.F_Apertura;
 
                 TimeSpan? ts = fechaOrden - FechaApertura;
@@ -1158,13 +1178,18 @@ namespace CompensationPlan.Calculo.Bussines
                 {
                     result = true;
                 }
-
-                ts = fechaOrden - FechaUltimaCompra;
-                int diasUltimaCompra = ts.Value.Days;
-                if (diasUltimaCompra >= DiasReactivado)
+                if (FechaReactivacion!=null)
                 {
-                    result = true;
+                    ts = fechaOrden - FechaReactivacion;
+                    int diasUltimaCompra = ts.Value.Days;
+                    if (diasUltimaCompra <= DiasReactivado)
+                    {
+                        result = true;
+                    }
                 }
+
+
+                
 
             }
 

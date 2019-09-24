@@ -30,6 +30,30 @@ namespace Compensation.Client
             
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalso>();
+
+            services.AddBlazorContextMenu(options =>
+            {
+                options.ConfigureTemplate("dark", template =>
+                {
+                    template.MenuCssClass = "dark-menu";
+                    template.MenuItemCssClass = "dark-menu-item";
+                    template.MenuItemDisabledCssClass = "dark-menu-item--disabled";
+                    template.MenuItemWithSubMenuCssClass = "dark-menu-item--with-submenu";
+                   
+                });
+
+                options.ConfigureTemplate("pink", template =>
+                {
+                    template.MenuCssClass = "pink-menu";
+                    template.MenuItemCssClass = "pink-menu-item";
+                    template.MenuItemDisabledCssClass = "pink-menu-item--disabled";
+                    template.SeperatorHrCssClass = "pink-menu-seperator-hr";
+                    template.MenuItemWithSubMenuCssClass = "pink-menu-item--with-submenu";
+                   
+                });
+            });
+
+
         }
 
         public void Configure(IComponentsApplicationBuilder app)
