@@ -20,8 +20,11 @@ namespace Compensaction.Share
         public int DiasClienteReactivado { get; set; }
 
 
+
         public decimal UmbralOrdenesPignoradas{ get; set; }
                
+  
+
         public int DiasPagoDoble { get; set; }
 
     }

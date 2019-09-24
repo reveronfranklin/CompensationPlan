@@ -1,0 +1,80 @@
+﻿@page "/indice-TipoPago"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TipoPagoService tipoPagoService
+@inject IJSRuntime JS
+
+<h3>Tipo Pago</h3>
+
+<div>
+    <a class="btn btn-success" href="crear-TipoPago">Nuevo Tipo</a>
+</div>
+
+@if (tipoPago == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (tipoPago.Length == 0)
+{
+    <tesxt>  No se encontraron resultados.</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>TipoPago</th>
+                <th>Descripción</th>
+                <th>Calcular</th>
+                <th>AplicaGerente</th>                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in tipoPago)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-TipoPago/@item.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                </td>
+
+                <td>@item.TipoPago</td>
+                <td>@item.Descripcion</td>
+                <th>@item.FlagCalcular</th>
+                <th>@item.AplicaGerente</th>                
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCTipoPago[] tipoPago { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        tipoPago = await tipoPagoService.GetTipoPagoAsync();
+    }
+
+    async Task Borrar(int Id)
+    {        
+        var selecionado = tipoPago.First(f => f.Id == Id);
+
+        string Mensaje = $"deseas borrar este Registro?";
+
+        if (await JS.Confirm("Confirmar",Mensaje,Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {         
+            await tipoPagoService.DeleteTipoPagoAsync(Id);
+
+            await GetData();
+        }
+    }
+
+}

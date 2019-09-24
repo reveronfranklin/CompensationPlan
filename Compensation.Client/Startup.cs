@@ -10,6 +10,7 @@ namespace Compensation.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<TipoPagoService>();
             services.AddSingleton<SysFileService>();
             services.AddSingleton<FlatComisionService>();
             services.AddSingleton<CalculoService>();

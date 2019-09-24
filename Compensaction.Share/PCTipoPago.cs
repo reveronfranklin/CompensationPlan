@@ -7,6 +7,7 @@ namespace Compensaction.Share
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(2)]
         public string TipoPago { get; set; }
 
         [Required]

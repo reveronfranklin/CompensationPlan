@@ -1,0 +1,56 @@
+﻿<EditForm Model="@Model" OnValidSubmit="@OnValidSubmit">
+
+    <div class="form-field">
+        <label>Tipo Pago:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@Model.TipoPago" />
+            <ValidationMessage For="@(()=> Model.TipoPago)" />
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-field">
+        <label>Descripción:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@Model.Descripcion" />
+            <ValidationMessage For="@(()=> Model.Descripcion)" />
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-group row mb-1">
+        <label class="col-sm-1 col-form-label" for="Activo">Calcular:</label>
+        <div class="col-sm-2">
+            <InputCheckbox Class="form-control" @bind-Value="@Model.FlagCalcular" />
+            <ValidationMessage For="@(()=> Model.FlagCalcular)" />
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-group row mb-1">
+        <label class="col-sm-1 col-form-label" for="Activo">Aplica Gerente:</label>
+        <div class="col-sm-2">
+            <InputCheckbox Class="form-control" @bind-Value="@Model.AplicaGerente" />
+            <ValidationMessage For="@(()=> Model.AplicaGerente)" />
+        </div>
+    </div>
+    <br>
+
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+
+    <DataAnnotationsValidator />
+
+</EditForm>
+
+@code {
+
+    [Parameter] public PCTipoPago Model { get; set; } = new PCTipoPago();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

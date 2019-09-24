@@ -19,7 +19,8 @@
     <Item OnClick="@OnClickProductoCuota">Producto Cuota</Item>
     <Item OnClick="@OnClickCuotaVentas">Cuota Vendedor</Item>
     <Item OnClick="@OnClickOrdenesPignoradas">Ordenes Pignoradas</Item>
-    
+    <Item OnClick="@OnClickSysFile">Sysfile</Item>
+
 </ContextMenu>
 
 @functions{
@@ -30,66 +31,75 @@
         UriHelper.NavigateTo("indice-periodo");
 
     }
-     void OnClickFlatComision(ItemClickEventArgs e)
+    void OnClickFlatComision(ItemClickEventArgs e)
     {
 
-         UriHelper.NavigateTo("indice-FlatComision");
+        UriHelper.NavigateTo("indice-FlatComision");
 
     }
-     void OnClickFlatComisionGerente(ItemClickEventArgs e)
+    void OnClickFlatComisionGerente(ItemClickEventArgs e)
     {
 
-         UriHelper.NavigateTo("indice-FlatComisionGerente");
+        UriHelper.NavigateTo("indice-FlatComisionGerente");
 
     }
-     void OnClickRangoCumplimientoCuotaGeneral(ItemClickEventArgs e)
+    void OnClickRangoCumplimientoCuotaGeneral(ItemClickEventArgs e)
     {
 
-         UriHelper.NavigateTo("indice-RangoCumplimientoCuotaGeneral");
-       
+        UriHelper.NavigateTo("indice-RangoCumplimientoCuotaGeneral");
+
     }
-         void OnClickPorcCantidadCategoriasCubiertas(ItemClickEventArgs e)
+    void OnClickPorcCantidadCategoriasCubiertas(ItemClickEventArgs e)
     {
 
-           UriHelper.NavigateTo("indice-PorcCantidadCategoriasCubiertas");
+        UriHelper.NavigateTo("indice-PorcCantidadCategoriasCubiertas");
 
-       
+
     }
     void OnClickTasa(ItemClickEventArgs e)
     {
 
-            UriHelper.NavigateTo("indice-tasa-año-mes");
+        UriHelper.NavigateTo("indice-tasa-año-mes");
 
-       
+
     }
 
     void OnClickProductoCuota(ItemClickEventArgs e)
     {
 
-            UriHelper.NavigateTo("indice-ProductoCuota");
+        UriHelper.NavigateTo("indice-ProductoCuota");
 
-       
+
     }
-     void OnClickCuotaVentas(ItemClickEventArgs e)
+    void OnClickCuotaVentas(ItemClickEventArgs e)
     {
 
-           UriHelper.NavigateTo("indice-CuotaVentas");
+        UriHelper.NavigateTo("indice-CuotaVentas");
 
-       
+
     }
-      void OnClickOrdenesPignoradas(ItemClickEventArgs e)
+    void OnClickOrdenesPignoradas(ItemClickEventArgs e)
     {
 
-          UriHelper.NavigateTo("indice-OrdenesPignoradas");
+        UriHelper.NavigateTo("indice-OrdenesPignoradas");
 
-       
+
     }
-      
+     void OnClickSysFile(ItemClickEventArgs e)
+    {
+
+        UriHelper.NavigateTo("indice-SysFile");
+
+
+    }
+
     
-    void OnClick(ItemClickEventArgs e)
-    {
 
-        UriHelper.NavigateTo("indice-periodo");
 
-    }
+        void OnClick(ItemClickEventArgs e)
+            {
+
+                UriHelper.NavigateTo("indice-periodo");
+
+            }
 }
