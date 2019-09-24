@@ -55,8 +55,18 @@
             <ValidationMessage For="@(()=> sysFile.UmbralOrdenesPignoradas)" />
         </div>
     </div>
-        
-    <br>
+
+    <br />
+
+    <div class="form-field">
+        <label>Dias Pago Doble:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.DiasPagoDoble" />
+            <ValidationMessage For="@(()=> sysFile.DiasPagoDoble)" />
+        </div>
+    </div>
+
+    <br />
 
     <button type="submit" class="btn btn-success">@TextoBoton</button>
 

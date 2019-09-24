@@ -28,6 +28,7 @@ else
                 <th>DiasCliNuevo</th>
                 <th>DiasCliReact</th>
                 <th>UmbralOrdPig</th>
+                <th>DiasPagoDoble</th>
             </tr>
         </thead>
         <tbody>
@@ -38,13 +39,14 @@ else
                     <a class="btn btn-success" href="editar-sysfile/@item.Id">Editar</a>
                     <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
                 </td>
-                                
+
                 <td>@item.ToleranciaDesde</td>
                 <td>@item.ToleranciaHasta</td>
                 <th>@item.PorcCunplimiento</th>
                 <th>@item.DiasClienteNuevo</th>
                 <th>@item.DiasClienteReactivado</th>
                 <th>@item.UmbralOrdenesPignoradas</th>
+                <th>@item.DiasPagoDoble</th>
 
             </tr>
             }
