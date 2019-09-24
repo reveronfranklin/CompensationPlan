@@ -23,7 +23,7 @@ namespace Compensation.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PCOficina>>> GetOficina()
         {
-            _context.Database.ExecuteSqlCommand("PCSpOficina @p0", "");
+             _context.Database.ExecuteSqlCommand("PCSpOficina @p0", "");
 
             return await _context.PCOficina.ToListAsync();
 

@@ -1,0 +1,83 @@
+﻿@page "/indice-SysFile"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject SysFileService sysFileService
+@inject IJSRuntime JS
+
+<h3>SysFile</h3>
+
+@if (sysFile == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (sysFile.Length == 0)
+{
+   <div>
+      <a class="btn btn-success" href="crear-sysfile">Nuevo</a>
+   </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>TolDesde</th>
+                <th>TolHasta</th>
+                <th>% Cumplim</th>
+                <th>DiasCliNuevo</th>
+                <th>DiasCliReact</th>
+                <th>UmbralOrdPig</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in sysFile)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-sysfile/@item.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.Id))">Borrar</button>
+                </td>
+                                
+                <td>@item.ToleranciaDesde</td>
+                <td>@item.ToleranciaHasta</td>
+                <th>@item.PorcCunplimiento</th>
+                <th>@item.DiasClienteNuevo</th>
+                <th>@item.DiasClienteReactivado</th>
+                <th>@item.UmbralOrdenesPignoradas</th>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    PCSysFile[] sysFile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        sysFile = await sysFileService.GetSysFileAsync();
+    }
+
+    async Task Borrar(int Id)
+    {        
+        var selecionado = sysFile.First(f => f.Id == Id);
+
+        string Mensaje = $"deseas borrar este Registro?";
+
+        if (await JS.Confirm("Confirmar",Mensaje,Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {         
+            await sysFileService.DeleteSysFileAsync(Id);
+
+            await GetData();
+        }
+    }
+
+}

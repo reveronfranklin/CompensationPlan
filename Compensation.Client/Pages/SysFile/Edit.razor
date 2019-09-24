@@ -1,0 +1,31 @@
+﻿@page  "/editar-sysfile/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject SysFileService sysFileService
+@inject NavigationManager UriHelper
+
+<h3>Editar SysFile</h3>
+
+<FormularioSysFile TextoBoton="Guardar" OnValidSubmit="@EditarSysFile" sysFile="@sysFile" />
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+
+    PCSysFile sysFile = new PCSysFile();
+
+
+    protected async override Task OnParametersSetAsync()
+    {
+        sysFile = await sysFileService.GetSysFileByIdAsync(Id);
+    }
+
+
+    async Task EditarSysFile()
+    {
+        await sysFileService.UpdateSysFileAsync(Id,sysFile);
+
+        UriHelper.NavigateTo("indice-SysFile");
+    }
+
+}

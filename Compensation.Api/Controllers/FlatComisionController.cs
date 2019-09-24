@@ -58,6 +58,7 @@ namespace Compensation.Api.Controllers
             return CreatedAtAction("GetFlatComision", new { id = flatComision.Id }, flatComision);
         }
         
+
         // PUT: api/FlatComision/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFlatComision(int id, PCFlatComision flatComision)

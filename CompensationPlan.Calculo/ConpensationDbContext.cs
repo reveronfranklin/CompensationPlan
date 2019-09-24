@@ -23,7 +23,7 @@ namespace CompensationPlan.Calculo
         public DbSet<PCTipoPago> PCTipoPago { get; set; }
         public DbSet<PCTemporal> PCTemporal { get; set; }
         public DbSet<PCHistorico> PCHistorico { get; set; }
-        public DbSet<PCSysfile> PCSysfile { get; set; }
+        public DbSet<PCSysFile> PCSysfile { get; set; }
         public DbSet<WSMY685> WSMY685 { get; set; }
         public DbSet<PCOficina> PCOficina { get; set; }
         public DbSet<PCVendedor> PCVendedor { get; set; }

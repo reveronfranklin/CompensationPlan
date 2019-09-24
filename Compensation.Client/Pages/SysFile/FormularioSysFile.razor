@@ -1,0 +1,76 @@
+﻿<EditForm Model="@sysFile" OnValidSubmit="@OnValidSubmit">
+
+    <div class="form-field">
+        <label>Tolerancia Desde:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.ToleranciaDesde" />
+            <ValidationMessage For="@(()=> sysFile.ToleranciaDesde)" />
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-field">
+        <label>Tolerancia Hasta:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.ToleranciaHasta" />
+            <ValidationMessage For="@(()=> sysFile.ToleranciaHasta)" />
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-field">
+        <label>(%) Cumplimiento:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.PorcCunplimiento" />
+            <ValidationMessage For="@(()=> sysFile.PorcCunplimiento)" />
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-field">
+        <label>Dias Cliente Nuevo:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.DiasClienteNuevo" />
+            <ValidationMessage For="@(()=> sysFile.DiasClienteNuevo)" />
+        </div>
+    </div>
+    <br>
+    <div class="form-field">
+        <label>Dias Cliente Reactivado:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.DiasClienteReactivado" />
+            <ValidationMessage For="@(()=> sysFile.DiasClienteReactivado)" />
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-field">
+        <label>Umbral Ordenes Pignoradas:</label>
+        <div>
+            <InputNumber Class="form-control" @bind-Value="@sysFile.UmbralOrdenesPignoradas" />
+            <ValidationMessage For="@(()=> sysFile.UmbralOrdenesPignoradas)" />
+        </div>
+    </div>
+        
+    <br>
+
+    <button type="submit" class="btn btn-success">@TextoBoton</button>
+
+    <DataAnnotationsValidator />
+
+</EditForm>
+
+@code {
+
+
+    [Parameter] public PCSysFile sysFile { get; set; } = new PCSysFile();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

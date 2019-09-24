@@ -148,7 +148,7 @@ namespace CompensationPlan.Calculo.Bussines
             int CantidadCuotasCumplidas = 0;
             decimal cumplimiento = 0;
 
-            PCSysfile pCSysfile = new PCSysfile();
+            PCSysFile pCSysfile = new PCSysFile();
             pCSysfile = _context.PCSysfile.FirstOrDefault();
             cumplimiento = pCSysfile.PorcCunplimiento;
             ComisionCantidadCuotasCumplidasView comisionCantidadCuotasCumplidasView = new ComisionCantidadCuotasCumplidasView();
@@ -186,7 +186,7 @@ namespace CompensationPlan.Calculo.Bussines
             int CantidadCuotasCumplidas = 0;
             decimal cumplimiento = 0;
 
-            PCSysfile pCSysfile = new PCSysfile();
+            PCSysFile pCSysfile = new PCSysFile();
             pCSysfile = _context.PCSysfile.FirstOrDefault();
             cumplimiento = pCSysfile.PorcCunplimiento;
 
@@ -814,7 +814,7 @@ namespace CompensationPlan.Calculo.Bussines
             decimal diferenciaComision = 0;
             decimal ultimaCuota = 0;
             int cantidaCuotaCumplida = 0;
-            PCSysfile pCSysfile = new PCSysfile();
+            PCSysFile pCSysfile = new PCSysFile();
             pCSysfile = _context.PCSysfile.FirstOrDefault();
             if (!ExisteHistorico(pCTemporal))
             {
@@ -1135,7 +1135,7 @@ namespace CompensationPlan.Calculo.Bussines
         {
 
             _context.Database.ExecuteSqlCommand("PCSpActualizaCliente @p0", cliente);
-            PCSysfile pCSysfile = new PCSysfile();
+            PCSysFile pCSysfile = new PCSysFile();
             pCSysfile = _context.PCSysfile.FirstOrDefault();
             int DiasNuevo = pCSysfile.DiasClienteNuevo;
             int DiasReactivado = pCSysfile.DiasClienteReactivado;

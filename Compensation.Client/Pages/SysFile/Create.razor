@@ -1,0 +1,21 @@
+﻿@page "/crear-sysfile"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject SysFileService sysFileService
+@inject NavigationManager UriHelper
+
+<h3>Crear SysFile</h3>
+
+<FormularioSysFile TextoBoton="Crear" OnValidSubmit="@CrearSysFile" sysFile="@sysFile" />
+
+@code {
+
+    PCSysFile sysFile = new PCSysFile();
+
+    async Task CrearSysFile()
+    {
+        await sysFileService.InsertSysFileAsync(sysFile);
+
+        UriHelper.NavigateTo("indice-SysFile");
+    }
+}
