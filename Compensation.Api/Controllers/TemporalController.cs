@@ -118,6 +118,22 @@ namespace Compensation.Api.Controllers
 
 
         }
+        // GET: api/Temporal/5
+        [HttpGet("GetTemporalOrden/{id}")]
+        public async Task<ActionResult<IEnumerable<PCTemporal>>> GetTemporalOrden(string id)
+        {
+            var resumen = await _context.PCTemporal.Where(r => r.OrdenString == id).ToListAsync();
+
+            if (resumen == null)
+            {
+                return NotFound();
+            }
+
+            return resumen;
+
+
+
+        }
 
     }
 }

@@ -62,5 +62,7 @@ namespace Compensaction.Share
         public string MontoRealString { get; set; }
 
         public int IdPeriodo { get; set; }
+
+      
     }
 }

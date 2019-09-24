@@ -15,6 +15,10 @@ namespace Compensaction.Share
         [Required]
         public bool FlagCalcular { get; set; }
 
+        [Required]
+        public bool AplicaGerente { get; set; }
+
+
     }
 
     public enum TipoPagoEnum

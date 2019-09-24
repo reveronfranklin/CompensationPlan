@@ -1,0 +1,95 @@
+﻿@inject NavigationManager UriHelper
+<div class="btn-group">
+    <ContextMenuTrigger MenuId="triggerMenu" MouseButtonTrigger="MouseButtonTrigger.Left">
+        <NavLink class="nav-link" href="">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Configuracion
+        </NavLink>
+        @*<button class="btn btn-dark"> Configuracion </button>*@
+    </ContextMenuTrigger>
+
+</div>
+
+<ContextMenu Id="triggerMenu" CssClass="z-10">
+    <Item OnClick="@OnClickPeriodo">Periodo</Item>
+    <Item OnClick="@OnClickFlatComision">% Comision Lineal </Item>
+    <Item OnClick="@OnClickFlatComisionGerente">% Comision Lineal Gerente</Item>
+    <Item OnClick="@OnClickRangoCumplimientoCuotaGeneral">Cuota General</Item>
+    <Item OnClick="@OnClickPorcCantidadCategoriasCubiertas">Categorias Cubiertas</Item>
+    <Item OnClick="@OnClickTasa">Tasa</Item>
+    <Item OnClick="@OnClickProductoCuota">Producto Cuota</Item>
+    <Item OnClick="@OnClickCuotaVentas">Cuota Vendedor</Item>
+    <Item OnClick="@OnClickOrdenesPignoradas">Ordenes Pignoradas</Item>
+    
+</ContextMenu>
+
+@functions{
+
+    void OnClickPeriodo(ItemClickEventArgs e)
+    {
+
+        UriHelper.NavigateTo("indice-periodo");
+
+    }
+     void OnClickFlatComision(ItemClickEventArgs e)
+    {
+
+         UriHelper.NavigateTo("indice-FlatComision");
+
+    }
+     void OnClickFlatComisionGerente(ItemClickEventArgs e)
+    {
+
+         UriHelper.NavigateTo("indice-FlatComisionGerente");
+
+    }
+     void OnClickRangoCumplimientoCuotaGeneral(ItemClickEventArgs e)
+    {
+
+         UriHelper.NavigateTo("indice-RangoCumplimientoCuotaGeneral");
+       
+    }
+         void OnClickPorcCantidadCategoriasCubiertas(ItemClickEventArgs e)
+    {
+
+           UriHelper.NavigateTo("indice-PorcCantidadCategoriasCubiertas");
+
+       
+    }
+    void OnClickTasa(ItemClickEventArgs e)
+    {
+
+            UriHelper.NavigateTo("indice-tasa-año-mes");
+
+       
+    }
+
+    void OnClickProductoCuota(ItemClickEventArgs e)
+    {
+
+            UriHelper.NavigateTo("indice-ProductoCuota");
+
+       
+    }
+     void OnClickCuotaVentas(ItemClickEventArgs e)
+    {
+
+           UriHelper.NavigateTo("indice-CuotaVentas");
+
+       
+    }
+      void OnClickOrdenesPignoradas(ItemClickEventArgs e)
+    {
+
+          UriHelper.NavigateTo("indice-OrdenesPignoradas");
+
+       
+    }
+      
+    
+    void OnClick(ItemClickEventArgs e)
+    {
+
+        UriHelper.NavigateTo("indice-periodo");
+
+    }
+}

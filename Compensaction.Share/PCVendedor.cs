@@ -8,7 +8,7 @@ namespace Compensaction.Share
     {
         public int Id { get; set; }
 
-        public string Codigo { get; set; }
+        public string IdVendedor { get; set; }
 
         public string Nombre { get; set; }
 
@@ -21,5 +21,7 @@ namespace Compensaction.Share
         public string Supervisor { get; set; }
 
         public bool Gerente { get; set; }
+
+        public bool NoPagarComision { get; set; }
     }
 }

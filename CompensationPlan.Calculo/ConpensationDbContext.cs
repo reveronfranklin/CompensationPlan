@@ -36,6 +36,9 @@ namespace CompensationPlan.Calculo
         public DbSet<PCCliente> PCCliente { get; set; }
         public DbSet<PCOrdenesPignoradas> PCOrdenesPignoradas { get; set; }
 
+       
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.;Database=PC;User Id=userweb;Password=userweb2003;MultipleActiveResultSets=true",

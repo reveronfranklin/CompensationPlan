@@ -95,6 +95,7 @@ namespace CompensationPlan.Calculo
                                 
                                 Console.WriteLine($"Calculando el reg Nro:{item.Id}");
                             }
+                            calcularComision.LimpiaCalculosNoValidos();
                         }
 
                         proceso.Culminado = true;
