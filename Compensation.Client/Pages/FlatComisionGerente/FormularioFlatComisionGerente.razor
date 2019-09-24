@@ -26,7 +26,7 @@
             {
                 @foreach (var itemVendedor in vendedorList)
                 {
-                    <option value="@itemVendedor.Codigo">@itemVendedor.Nombre</option>
+                    <option value="@itemVendedor.IdVendedor">@itemVendedor.Nombre</option>
                 }
             }
 
@@ -94,7 +94,7 @@
         string id = e.Value.ToString();
 
         flatComisionGerente.Gerente = id;
-        vendedorSelected = vendedorList.Where(v => v.Codigo == flatComisionGerente.Gerente).FirstOrDefault();
+        vendedorSelected = vendedorList.Where(v => v.IdVendedor == flatComisionGerente.Gerente).FirstOrDefault();
         flatComisionGerente.NombreGerente = vendedorSelected.Nombre;
 
 

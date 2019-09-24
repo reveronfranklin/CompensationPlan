@@ -1142,7 +1142,7 @@ namespace CompensationPlan.Calculo.Bussines
         {
             string Supervisor = "";
             PCVendedor pCVendedor = new PCVendedor();
-            pCVendedor = _context.PCVendedor.Where(v => v.Codigo == Vendedor.Trim()).FirstOrDefault();
+            pCVendedor = _context.PCVendedor.Where(v => v.IdVendedor == Vendedor.Trim()).FirstOrDefault();
             if (pCVendedor != null)
             {
                 Supervisor = pCVendedor.Supervisor;
@@ -1227,7 +1227,51 @@ namespace CompensationPlan.Calculo.Bussines
 
         }
 
+        public void LimpiaCalculosNoValidos()
+        {
+            List<PCTemporal> pCTemporal = new List<PCTemporal>();
+            pCTemporal = _context.PCTemporal.ToList();
+            bool aplicaGerente = false;
+            PCTipoPago pCTipoPago = new PCTipoPago();
+            foreach (var item in pCTemporal)
+            {
+                pCTipoPago = _context.PCTipoPago.Where(t => t.Id == item.IdTipoPago).FirstOrDefault();
+                aplicaGerente = pCTipoPago.AplicaGerente;
 
+                if (PagaComicion(item.IdVendedor, aplicaGerente) == false)
+                {
+                   
+                    _context.PCTemporal.Remove(item);
+                }
+            }
+            _context.SaveChanges();
+        }
+
+
+        public bool PagaComicion(string Vendedor,bool aplicaGerente)
+        {
+            bool paga = true;
+            PCVendedor pCVendedor = new PCVendedor();
+            pCVendedor = _context.PCVendedor.Where(v => v.IdVendedor == Vendedor.Trim()).FirstOrDefault();
+            if (pCVendedor != null)
+            {
+                if (pCVendedor.Activo==false)
+                {
+                    return false;
+                    
+                }
+
+                if (pCVendedor.Gerente == true && pCVendedor.NoPagarComision == true && aplicaGerente== true)
+                {
+                    return false;
+                }
+            }
+            
+
+            return paga;
+        }
+
+        
         #endregion
 
     }
