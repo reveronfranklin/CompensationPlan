@@ -71,15 +71,6 @@ namespace Compensation.Api.Controllers
         public async Task<ActionResult<PCCuotaVentas>> PostCuotaventas(PCCuotaVentas pCCuotaVentas )
         {
 
-            PCTasaAñoMes pCTasaAñoMes = new PCTasaAñoMes();
-            pCTasaAñoMes = _context.PCTasaAñoMes.Where(t => t.Año == pCCuotaVentas.Año && t.Mes == pCCuotaVentas.Mes).FirstOrDefault();
-            if (pCTasaAñoMes!=null)
-            {
-                pCCuotaVentas.TasaUsd = pCTasaAñoMes.Tasa;
-                pCCuotaVentas.Cuota = pCCuotaVentas.CuotaUsd * pCCuotaVentas.TasaUsd;
-            }
-            
-            
             _context.PCCuotaVentas.Add(pCCuotaVentas);
             
             await _context.SaveChangesAsync();
@@ -96,13 +87,7 @@ namespace Compensation.Api.Controllers
                 return BadRequest();
             }
 
-            PCTasaAñoMes pCTasaAñoMes = new PCTasaAñoMes();
-            pCTasaAñoMes = _context.PCTasaAñoMes.Where(t => t.Año == pCCuotaVentas.Año && t.Mes == pCCuotaVentas.Mes).FirstOrDefault();
-            if (pCTasaAñoMes != null)
-            {
-                pCCuotaVentas.TasaUsd = pCTasaAñoMes.Tasa;
-                pCCuotaVentas.Cuota = pCCuotaVentas.CuotaUsd * pCCuotaVentas.TasaUsd;
-            }
+
 
            
             _context.Entry(pCCuotaVentas).State = EntityState.Modified;

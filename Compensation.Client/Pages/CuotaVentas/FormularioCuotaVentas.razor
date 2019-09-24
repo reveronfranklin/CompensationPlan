@@ -1,0 +1,151 @@
+﻿@using Compensation.Client.Data
+@inject OficinaService oficinaService
+@inject VendedorService vendedorService
+    <EditForm Model="@cuotaVentas" OnValidSubmit="@OnValidSubmit">
+
+        <div class="form-field">
+            <label>Año:</label>
+            <div>
+                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.Año"  disabled="@IsDisabled" />
+                <ValidationMessage For="@(()=> cuotaVentas.Año)" />
+            </div>
+        </div>
+        <br>
+        <div class="form-field">
+            <label>Mes:</label>
+            <div>
+                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.Mes"  disabled="@IsDisabled" />
+                <ValidationMessage For="@(()=> cuotaVentas.Mes)" />
+            </div>
+        </div>
+        <br>
+        @if (@Accion != "Edit")
+        {
+            <select class="custom-select" id="oficinaDrop" @onchange="@OficinaSelectionChanged">
+                <option value="">-- Select Oficina --</option>
+                @if (oficinaList != null)
+                {
+                    @foreach (var itemOficina in oficinaList)
+                    {
+                        <option value="@itemOficina.CodOficina">@itemOficina.NombreOficina</option>
+                    }
+                }
+
+
+            </select>
+            <select class="custom-select" id="vendedorDrop" @onchange="@VendedorSelectionChanged" value="@codigoVendedor">
+                <option value="">-- Select Vendedor --</option>
+                @if (vendedorList != null)
+                {
+                    @foreach (var itemVendedor in vendedorList)
+                    {
+                        <option value="@itemVendedor.IdVendedor">@itemVendedor.Nombre</option>
+                    }
+                }
+
+            </select>
+            <div class="form-field">
+                <label>Vendedor:</label>
+                <div>
+                    <InputText Class="form-control" @bind-Value="@cuotaVentas.Vendedor" />
+                    <ValidationMessage For="@(()=> cuotaVentas.Vendedor)" />
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label>Id Producto :</label>
+                <div>
+                    <InputNumber Class="form-control" @bind-Value="@cuotaVentas.IdProductoCuota" />
+                    <ValidationMessage For="@(()=> cuotaVentas.IdProductoCuota)" />
+                </div>
+            </div>
+            <br>
+        }
+
+
+        <div class="form-field">
+            <label>Vendedor:</label>
+            <div>
+                <InputText Class="form-control" @bind-Value="@cuotaVentas.NombreVendedor"  disabled="@IsDisabled" />
+                <ValidationMessage For="@(()=> cuotaVentas.NombreVendedor)" />
+            </div>
+        </div>
+        <br>
+
+        <div class="form-field">
+            <label>Cuota USD :</label>
+            <div>
+                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.CuotaUsd" />
+                <ValidationMessage For="@(()=> cuotaVentas.CuotaUsd)" />
+            </div>
+        </div>
+        <br>
+
+
+
+        <button type="submit" class="btn btn-success">@TextoBoton</button>
+        <DataAnnotationsValidator />
+    </EditForm>
+
+@code {
+
+
+    [Parameter] public PCCuotaVentas cuotaVentas { get; set; } = new PCCuotaVentas();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter] public string Accion { get; set; } = "Edit";
+
+    PCOficina[] oficinaList { get; set; }
+
+    PCVendedor[] vendedorList { get; set; }
+
+    public int oficinaId = 0;
+    string codigoVendedor = "";
+    bool IsDisabled = true;
+    protected async override Task OnParametersSetAsync()
+    {
+
+        await GetDataOficina();
+
+        codigoVendedor = cuotaVentas.Vendedor;
+        if (Accion=="Edit")
+        {
+            IsDisabled = true;
+        }
+        else
+        {
+            IsDisabled = false;
+        }
+
+    }
+
+
+    async Task GetDataOficina()
+    {
+        oficinaList = await oficinaService.GetOficinaAsync();
+    }
+    async Task OficinaSelectionChanged(ChangeEventArgs e)
+    {
+
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            oficinaId = id;
+
+            vendedorList = await vendedorService.GetVendedorAsync(id);
+        }
+
+    }
+
+    async Task VendedorSelectionChanged(ChangeEventArgs e)
+    {
+        string id = e.Value.ToString();
+
+        codigoVendedor = id;
+        cuotaVentas.Vendedor = codigoVendedor;
+
+    }
+
+}

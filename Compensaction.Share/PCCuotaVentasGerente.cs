@@ -22,11 +22,16 @@ namespace Compensaction.Share
 
         public decimal PorcCumplimiento { get; set; }
 
+        public string CuotaUsdString { get; set; }
+
+        public string VentaUsdString { get; set; }
+
+        public string DescripcionCuota { get; set; }
 
 
 
 
-        
+
 
     }
 }

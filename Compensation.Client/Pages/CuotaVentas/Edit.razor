@@ -1,0 +1,32 @@
+﻿@page  "/editar-CuotaVentas/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject CuotaVentasService cuotaVentasService
+@inject NavigationManager UriHelper
+
+<h3>Editar Cuota de Ventas</h3>
+
+<FormularioCuotaVentas TextoBoton="Guardar" OnValidSubmit="@EditarCuotaVentas" cuotaVentas="@cuotaVentas"  Accion="Edit" />
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    PCCuotaVentas cuotaVentas = new PCCuotaVentas();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        cuotaVentas = await cuotaVentasService.GetCuotaVentasByIdAsync(Id);
+    }
+
+
+
+
+    async Task EditarCuotaVentas()
+    {
+
+        await cuotaVentasService.UpdateCuotaVentasAsync(Id, cuotaVentas);
+
+        UriHelper.NavigateTo("indice-CuotaVentas");
+    }
+
+}
