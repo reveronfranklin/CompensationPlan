@@ -9,7 +9,8 @@ CREATE TABLE [dbo].[PCAñoMesOrden]
 [IdVendedor] [nvarchar] (4) COLLATE Modern_Spanish_CI_AS NULL,
 [NombreVendedor] [nvarchar] (50) COLLATE Modern_Spanish_CI_AS NULL,
 [IdCliente] [nvarchar] (10) COLLATE Modern_Spanish_CI_AS NULL,
-[NombreCliente] [nvarchar] (50) COLLATE Modern_Spanish_CI_AS NULL
+[NombreCliente] [nvarchar] (50) COLLATE Modern_Spanish_CI_AS NULL,
+[Producto] [nvarchar] (12) COLLATE Modern_Spanish_CI_AS NULL
 )
 GO
 ALTER TABLE [dbo].[PCAñoMesOrden] ADD CONSTRAINT [PK_PCAñoMesOrden] PRIMARY KEY CLUSTERED  ([Id])

@@ -27,7 +27,8 @@ CREATE TABLE [dbo].[PCHistorico]
 [OrdenString] [nvarchar] (10) COLLATE Modern_Spanish_CI_AS NULL,
 [DocumentoString] [nvarchar] (10) COLLATE Modern_Spanish_CI_AS NULL,
 [MontoRealString] [nvarchar] (20) COLLATE Modern_Spanish_CI_AS NULL,
-[IdPeriodo] [int] NULL
+[IdPeriodo] [int] NULL,
+[ConceptoNomina] [nvarchar] (10) COLLATE Modern_Spanish_CI_AS NULL
 )
 GO
 ALTER TABLE [dbo].[PCHistorico] ADD CONSTRAINT [PK_PCHistorico_1] PRIMARY KEY CLUSTERED  ([Id])

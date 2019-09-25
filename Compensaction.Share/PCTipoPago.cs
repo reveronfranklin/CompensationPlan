@@ -18,7 +18,11 @@ namespace Compensaction.Share
         [Required]
         public bool AplicaGerente { get; set; }
 
+        [Required]
+        public string ConceptoNominaPago { get; set; }
 
+        [Required]
+        public string ConceptoNominaDescuento { get; set; }
     }
 
     public enum TipoPagoEnum

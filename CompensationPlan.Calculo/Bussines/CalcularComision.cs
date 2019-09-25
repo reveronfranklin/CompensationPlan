@@ -311,7 +311,7 @@ namespace CompensationPlan.Calculo.Bussines
         {
             List<PCTemporal> pCTemporal = new List<PCTemporal>();
             PCHistorico pCHistorico = new PCHistorico();
-
+            PCTipoPago pCTipoPago = new PCTipoPago();
             var proceso = _context.PCProceso.FirstOrDefault();
             if (proceso != null)
             {
@@ -351,6 +351,22 @@ namespace CompensationPlan.Calculo.Bussines
                         pCHistorico.MontoRealString = ToCurrencyString(item.MontoReal);
                         pCHistorico.IdPeriodo = item.IdPeriodo;
 
+                        pCTipoPago = _context.PCTipoPago.Find(item.IdTipoPago);
+                        if (pCTipoPago!=null)
+                        {
+                            if (pCHistorico.BsComision>0)
+                            {
+                                pCHistorico.ConceptoNomina = pCTipoPago.ConceptoNominaPago;
+                            }
+                            if (pCHistorico.BsComision < 0)
+                            {
+                                pCHistorico.ConceptoNomina = pCTipoPago.ConceptoNominaDescuento;
+
+                            }
+
+                        }
+
+
                         _context.PCHistorico.Add(pCHistorico);
 
                         proceso.RegistrosCerrados = cant++;
@@ -385,7 +401,7 @@ namespace CompensationPlan.Calculo.Bussines
         public void extraerDatos(string desde, string hasta, string usuario)
         {
 
-            _context.Database.ExecuteSqlCommand("PaNpcETL_CXC_Comisiones @p0, @p1,@p2", desde, hasta, usuario);
+            _context.Database.ExecuteSqlCommand("PCPaNpcETL_CXC_Comisiones @p0, @p1,@p2", desde, hasta, usuario);
 
 
         }

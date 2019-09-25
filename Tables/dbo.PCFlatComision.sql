@@ -5,5 +5,5 @@ CREATE TABLE [dbo].[PCFlatComision]
 [Porcentaje] [decimal] (18, 2) NOT NULL
 )
 GO
-ALTER TABLE [dbo].[PCFlatComision] ADD CONSTRAINT [PK_FlatComision] PRIMARY KEY CLUSTERED  ([Id])
+ALTER TABLE [dbo].[PCFlatComision] ADD CONSTRAINT [PK_FlatComisionNew] PRIMARY KEY CLUSTERED  ([Id])
 GO

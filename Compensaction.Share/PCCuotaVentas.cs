@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Compensaction.Share
@@ -8,12 +9,16 @@ namespace Compensaction.Share
     {
         public int Id { get; set; }
 
+        [Required]
         public int Año { get; set; }
 
+        [Required]
         public int Mes { get; set; }
 
+        [Required]
         public string Vendedor { get; set; }
 
+        [Required]
         public int IdProductoCuota { get; set; }
 
         public decimal Cuota { get; set; }
@@ -22,6 +27,7 @@ namespace Compensaction.Share
 
         public decimal PorcCumplimiento { get; set; }
 
+        [Required]
         public decimal CuotaUsd { get; set; }
 
         public decimal VentaUsd { get; set; }

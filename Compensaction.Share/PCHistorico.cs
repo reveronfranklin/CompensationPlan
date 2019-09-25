@@ -62,5 +62,7 @@ namespace Compensaction.Share
 
         public int IdPeriodo { get; set; }
 
+        public string ConceptoNomina { get; set; }
+
     }
 }

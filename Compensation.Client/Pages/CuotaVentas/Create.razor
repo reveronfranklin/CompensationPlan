@@ -1,6 +1,44 @@
-﻿@page "/crear-cuotaVentas"
-<h3>Crear Cuota Ventas</h3>
+﻿@page "/crear-cuotaventas"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject CuotaVentasService cuotaVentasService
+@inject NavigationManager UriHelper
+
+
+
+<h3>Crear Cuota de Ventas</h3>
+
+
+<FormularioCuotaVentas TextoBoton="Guardar" OnValidSubmit="@CrearCuotaVentas" cuotaVentas="@cuotaVentas" Accion="Create" Mensaje="@Mensaje"/>
 
 @code {
 
+    PCCuotaVentas cuotaVentas = new PCCuotaVentas();
+     string Mensaje = "";
+
+    async Task CrearCuotaVentas()
+    {
+        if (cuotaVentas.Año <= 0)
+        {
+            Mensaje = "Seleccione Año - Mes!!";
+            return;
+        }
+         if (cuotaVentas.Vendedor=="")
+        {
+            Mensaje = "Seleccione Vendedor!!";
+            return;
+        }
+        if (cuotaVentas.IdProductoCuota<=0)
+        {
+            Mensaje = "Seleccione Producto Cuota!!";
+            return;
+        }
+        if (cuotaVentas.CuotaUsd <=0)
+        {
+            Mensaje = "Ingrese Cuota!!";
+            return;
+        }
+        await cuotaVentasService.InsertCuotaVentasAsync(cuotaVentas);
+        UriHelper.NavigateTo("indice-CuotaVentas");
+    }
 }
