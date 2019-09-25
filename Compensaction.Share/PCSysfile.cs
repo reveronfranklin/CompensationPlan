@@ -23,10 +23,10 @@ namespace Compensaction.Share
 
         public decimal UmbralOrdenesPignoradas{ get; set; }
                
-<<<<<<< HEAD
+//<<<<<<< HEAD
   
-=======
->>>>>>> 17fa1a4fda41ff04cb0d68a5d6966eee2cc13074
+//=======
+//>>>>>>> 17fa1a4fda41ff04cb0d68a5d6966eee2cc13074
 
         public int DiasPagoDoble { get; set; }
 
