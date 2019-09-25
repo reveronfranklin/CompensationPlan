@@ -1,0 +1,21 @@
+﻿@page "/crear-TipoPago"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TipoPagoService tipoPagoService
+@inject NavigationManager UriHelper
+
+<h3>Crear Tipo Pago</h3>
+
+<FormularioTipoPago TextoBoton="Crear" OnValidSubmit="@CrearTipoPago" Model="@pcTipoPago" />
+
+@code {
+
+    PCTipoPago pcTipoPago = new PCTipoPago();
+
+    async Task CrearTipoPago()
+    {
+        await tipoPagoService.InsertTipoPagoAsync(pcTipoPago);
+
+        UriHelper.NavigateTo("indice-TipoPago");
+    }
+}

@@ -1,0 +1,31 @@
+﻿@page  "/editar-TipoPago/{Id:int}"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject TipoPagoService tipoPagoService
+@inject NavigationManager UriHelper
+
+<h3>Editar SysFile</h3>
+
+<FormularioTipoPago TextoBoton="Guardar" OnValidSubmit="@EditarTipoPago" Model="@pcTipoPago" />
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+
+    PCTipoPago pcTipoPago = new PCTipoPago();
+
+
+    protected async override Task OnParametersSetAsync()
+    {
+        pcTipoPago = await tipoPagoService.GetTipoPagoByIdAsync(Id);
+    }
+
+
+    async Task EditarTipoPago()
+    {
+        await tipoPagoService.UpdateTipoPagoAsync(Id,pcTipoPago);
+
+        UriHelper.NavigateTo("indice-TipoPago");
+    }
+
+}
