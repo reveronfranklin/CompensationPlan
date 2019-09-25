@@ -608,8 +608,7 @@ namespace CompensationPlan.Calculo.Bussines
                     }
                 }
 
-
-               
+          
                 if (ordenPignorada==false)
                 {
                     //Se Crea Registro de Comision Rango Cumplimiento Cuota General (TipoPagoEnum.CumplimientoCuotaGeneral=4)
@@ -799,14 +798,9 @@ namespace CompensationPlan.Calculo.Bussines
 
 
 
-
-
-
-
-
-
         }
-
+       
+        
         public bool ExisteHistorico(PCTemporal pCTemporal)
         {
             bool existe = false;

@@ -34,7 +34,7 @@ namespace Compensation.Client.Data
             return await client.PostAsync($"{baseUrl}api/CuotaVentas", getStringContentFromObject(pCCuotaVentas));
         }
 
-        public async Task<HttpResponseMessage> UpdateFlatComisionAsync(int id, PCCuotaVentas pCCuotaVentas )
+        public async Task<HttpResponseMessage> UpdateCuotaVentasAsync(int id, PCCuotaVentas pCCuotaVentas )
         {
             var client = new HttpClient();
             return await client.PutAsync($"{baseUrl}api/CuotaVentas/{id}", getStringContentFromObject(pCCuotaVentas));
