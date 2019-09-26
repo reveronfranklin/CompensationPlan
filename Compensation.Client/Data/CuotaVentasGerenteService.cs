@@ -25,7 +25,9 @@ namespace Compensation.Client.Data
         private StringContent getStringContentFromObject(object obj)
         {
             var serialized = JsonConvert.SerializeObject(obj);
+
             var stringContent = new StringContent(serialized, Encoding.UTF8, "application/json");
+
             return stringContent;
         }
 
