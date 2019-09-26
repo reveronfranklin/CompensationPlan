@@ -27,6 +27,7 @@ namespace Compensaction.Share
 
         public string NombreCliente { get; set; }
 
+        public string Producto { get; set; }
 
     }
 }

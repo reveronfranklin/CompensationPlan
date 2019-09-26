@@ -1,12 +1,31 @@
 ﻿@using Compensation.Client.Data
 @inject OficinaService oficinaService
 @inject VendedorService vendedorService
+@inject ProductoCuotaService productoCuotaService
+@inject TasaAñoMesService tasaAñoMesService
     <EditForm Model="@cuotaVentas" OnValidSubmit="@OnValidSubmit">
+        <h4 class="alert-danger">@Mensaje</h4>
+        <div class="form-field">
+            <label>Año:</label>
+            <select class="custom-select" id="tasaDrop" @onchange="@TasaSelectionChanged">
+                <option value="">-- Select Año-Mes--</option>
+                @if (pCTasaAñoMes != null)
+                {
+                    @foreach (var itemTasa in pCTasaAñoMes)
+                    {
+                        <option value="@itemTasa.Id">@itemTasa.Año - @itemTasa.Mes</option>
+                    }
+                }
 
+
+            </select>
+        </div>
+
+       
         <div class="form-field">
             <label>Año:</label>
             <div>
-                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.Año"  disabled="@IsDisabled" />
+                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.Año" disabled="true" />
                 <ValidationMessage For="@(()=> cuotaVentas.Año)" />
             </div>
         </div>
@@ -14,7 +33,7 @@
         <div class="form-field">
             <label>Mes:</label>
             <div>
-                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.Mes"  disabled="@IsDisabled" />
+                <InputNumber Class="form-control" @bind-Value="@cuotaVentas.Mes" disabled="true" />
                 <ValidationMessage For="@(()=> cuotaVentas.Mes)" />
             </div>
         </div>
@@ -33,6 +52,8 @@
 
 
             </select>
+            <br>
+            <br>
             <select class="custom-select" id="vendedorDrop" @onchange="@VendedorSelectionChanged" value="@codigoVendedor">
                 <option value="">-- Select Vendedor --</option>
                 @if (vendedorList != null)
@@ -44,33 +65,37 @@
                 }
 
             </select>
+            <br>
+            <br>
+
+            <select class="custom-select" id="productoDrop" @onchange="@ProductoSelectionChanged" value="@idProductoCuota">
+                <option value="">-- Select Producto --</option>
+                @if (productoCuota != null)
+                {
+                    @foreach (var itemProducto in productoCuota)
+                    {
+                        <option value="@itemProducto.Id">@itemProducto.Descripcion</option>
+                    }
+                }
+
+            </select>
+
+            <br>
+            <br>
+        }
+
+        @if (@Accion == "Edit")
+        {
             <div class="form-field">
                 <label>Vendedor:</label>
                 <div>
-                    <InputText Class="form-control" @bind-Value="@cuotaVentas.Vendedor" />
-                    <ValidationMessage For="@(()=> cuotaVentas.Vendedor)" />
-                </div>
-            </div>
-
-            <div class="form-field">
-                <label>Id Producto :</label>
-                <div>
-                    <InputNumber Class="form-control" @bind-Value="@cuotaVentas.IdProductoCuota" />
-                    <ValidationMessage For="@(()=> cuotaVentas.IdProductoCuota)" />
+                    <InputText Class="form-control" @bind-Value="@cuotaVentas.NombreVendedor" disabled="@IsDisabled" />
+                    <ValidationMessage For="@(()=> cuotaVentas.NombreVendedor)" />
                 </div>
             </div>
             <br>
         }
 
-
-        <div class="form-field">
-            <label>Vendedor:</label>
-            <div>
-                <InputText Class="form-control" @bind-Value="@cuotaVentas.NombreVendedor"  disabled="@IsDisabled" />
-                <ValidationMessage For="@(()=> cuotaVentas.NombreVendedor)" />
-            </div>
-        </div>
-        <br>
 
         <div class="form-field">
             <label>Cuota USD :</label>
@@ -98,20 +123,31 @@
 
     [Parameter] public string Accion { get; set; } = "Edit";
 
+    [Parameter] public string Mensaje { get; set; } = "";
+
     PCOficina[] oficinaList { get; set; }
 
     PCVendedor[] vendedorList { get; set; }
 
+    PCProductoCuota[] productoCuota { get; set; }
+
+    PCTasaAñoMes[] pCTasaAñoMes { get; set; }
+
+    PCTasaAñoMes  tasaSelected { get; set; }
+
     public int oficinaId = 0;
+    public int idProductoCuota = 0;
     string codigoVendedor = "";
     bool IsDisabled = true;
     protected async override Task OnParametersSetAsync()
     {
+        await GetDataProductoCuota();
 
         await GetDataOficina();
+        await GetDataTasa();
 
         codigoVendedor = cuotaVentas.Vendedor;
-        if (Accion=="Edit")
+        if (Accion == "Edit")
         {
             IsDisabled = true;
         }
@@ -139,6 +175,19 @@
 
     }
 
+    async Task ProductoSelectionChanged(ChangeEventArgs e)
+    {
+
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            idProductoCuota = id;
+
+            cuotaVentas.IdProductoCuota = id;
+        }
+
+    }
+
+
     async Task VendedorSelectionChanged(ChangeEventArgs e)
     {
         string id = e.Value.ToString();
@@ -147,5 +196,35 @@
         cuotaVentas.Vendedor = codigoVendedor;
 
     }
+    async Task TasaSelectionChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
 
+            tasaSelected = pCTasaAñoMes.Where(t => t.Id == id).FirstOrDefault();
+            cuotaVentas.Año = tasaSelected.Año;
+            cuotaVentas.Mes = tasaSelected.Mes;
+
+
+        }
+
+
+
+
+
+
+    }
+
+
+
+
+    async Task GetDataProductoCuota()
+    {
+        productoCuota = await productoCuotaService.getProductoCuota();
+    }
+    async Task GetDataTasa()
+    {
+        pCTasaAñoMes = await tasaAñoMesService.getTasaAñoMesnAsync();
+
+    }
 }

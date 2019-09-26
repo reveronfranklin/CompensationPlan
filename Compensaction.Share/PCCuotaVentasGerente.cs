@@ -24,16 +24,9 @@ namespace Compensaction.Share
 
         public string DescripcionCuota { get; set; }
 
-        public string CuotaString { get; set; }
+        public string CuotaString { get; set; }                    
 
         public string VentaString { get; set; }
-
-        
-
-
-
-
-
 
     }
 }
