@@ -18,9 +18,10 @@
     <Item OnClick="@OnClickTasa">Tasa</Item>
     <Item OnClick="@OnClickProductoCuota">Producto Cuota</Item>
     <Item OnClick="@OnClickCuotaVentas">Cuota Vendedor</Item>
+    <Item OnClick="@OnClickCuotaVentasGerente">Cuota Gerente</Item>
     <Item OnClick="@OnClickOrdenesPignoradas">Ordenes Pignoradas</Item>
     <Item OnClick="@OnClickSysFile">Sysfile</Item>
-
+   
 </ContextMenu>
 
 @functions{
@@ -78,6 +79,14 @@
 
 
     }
+        void OnClickCuotaVentasGerente(ItemClickEventArgs e)
+    {
+
+        UriHelper.NavigateTo("indice-CuotaVentasGerente");
+
+
+    }
+    
     void OnClickOrdenesPignoradas(ItemClickEventArgs e)
     {
 

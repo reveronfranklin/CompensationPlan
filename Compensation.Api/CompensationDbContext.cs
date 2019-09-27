@@ -9,6 +9,7 @@ namespace Compensation.Api
 {
     public class CompensationDbContext:DbContext
     {
+        public DbSet<PCCuotaVentasGerente> PCCuotaVentasGerente { get; set; }
         public DbSet<PCTipoPago> PCTipoPago { get; set; }
         public DbSet<PCSysFile> PCSysFile { get; set; }
         public DbSet<PCFlatComision> PCFlatComision { get; set; }
@@ -33,8 +34,7 @@ namespace Compensation.Api
         public DbSet<PCResumenComisionTemporal> PCResumenComisionTemporal { get; set; }
         public DbSet<PCTasaAñoMes> PCTasaAñoMes { get; set; }
         public DbSet<PCResumenOficinaTemporal> PCResumenOficinaTemporal { get; set; }
-        public DbSet<PCProductoCuota> PCProductoCuota { get; set; }
-        public DbSet<PCCuotaVentasGerente> PCCuotaVentasGerente { get; set; }
+        public DbSet<PCProductoCuota> PCProductoCuota { get; set; }        
         public DbSet<PCFlatComisionGerente> PCFlatComisionGerente { get; set; }
         public DbSet<PCCliente> PCCliente { get; set; }
         public DbSet<PCOrdenesPignoradas> PCOrdenesPignoradas { get; set; }

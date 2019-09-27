@@ -1,0 +1,193 @@
+﻿@page "/indice-CuotaVentasGerente"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject CuotaVentasGerenteService cuotaVentasGerenteService
+@inject OficinaService oficinaService
+@inject VendedorService vendedorService
+@inject IJSRuntime JS
+
+<h3>Cuota de Ventas Gerente</h3>
+<br />
+<div class="row">
+
+    <!-- Año -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Año</h5>
+                <p class="card-text"></p>
+                <div>
+
+                    <input type="text" @bind="año" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oficina -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Oficina</h5>
+                <p class="card-text"></p>
+                <select class="custom-select" id="oficinaDrop" @onchange="@OficinaSelectionChanged">
+                    <option value="">-- Seleccione Oficina --</option>
+                    @if (oficinaList != null)
+                    {
+                        @foreach (var itemOficina in oficinaList)
+                        {
+                            <option value="@itemOficina.CodOficina">@itemOficina.NombreOficina</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gerente -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Gerente</h5>
+                <p class="card-text"></p>
+                
+                <select class="custom-select" id="gerenteDrop"  @onchange="@GerenteSelectionChanged">
+                    <option value="">-- Seleccione Gerente --</option>
+                    @if (gerenteList != null)
+                    {
+                        @foreach (var itemGerente in gerenteList)
+                        {
+                            <option value="@itemGerente.IdVendedor">@itemGerente.Nombre</option>
+                        }
+                    }
+                </select>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@if (pcCuotaVentasGerente == null)
+{
+    <tesxt>  </tesxt>
+}
+else if (pcCuotaVentasGerente.Length == 0)
+{
+    <tesxt>  No existen datos de Cuota.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+          
+            <tr>                
+                <th>Año</th>
+                <th>Mes</th>
+                <th>Gerente</th>
+                <th>IdCuota</th>
+                <th align="right">Cuota</th>
+                <th align="right">Venta</th>
+                <th align="right">% Cumplimiento</th>                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pcCuotaVentasGerente)
+            {
+                <tr>
+                    <td>@item.Año</td>
+                    <td>@item.Mes</td>
+                    <td>@item.Gerente</td>
+                    <td>@item.IdProductoCuota-@item.DescripcionCuota</td>
+                    <td>@item.CuotaString </td>
+                    <td>@item.VentaString</td>
+                    <td>@item.PorcCumplimiento</td>                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    //---------- Variables necesarias ---------------------//
+    PCCuotaVentasGerente[] pcCuotaVentasGerente { get; set; }    
+    PCOficina[] oficinaList { get; set; }
+    PCVendedor[] gerenteList { get; set; }
+
+    public int oficinaId = 0;
+    string codigoGerente = "";
+    int año = DateTime.Now.Year;
+
+
+    //--------------Al Iniciar el componente -------//
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDataOficina();
+
+        await GetDataGerentes();
+    }
+
+     //Lista de Oficinas
+    async Task GetDataOficina()
+    {
+        oficinaList = await oficinaService.GetOficinaAsync();
+    }
+    
+    //Lista de Gerentes
+    async Task GetDataGerentes()
+    { 
+        //carga lista de Gerentes
+        gerenteList = await vendedorService.GetGerenteAsync();
+    }
+
+
+
+    //----------------------------------------------//
+
+    async Task GetData(string codigoGerente)
+    {
+        Console.WriteLine(codigoGerente);
+
+        pcCuotaVentasGerente = await cuotaVentasGerenteService.CuotaVentasGerenteAsync(codigoGerente);
+        
+        if (año > 0 )
+        {
+           await  GetDataAño(año);
+        }
+
+    }
+
+    async Task GetDataAño(int año)
+    {
+        pcCuotaVentasGerente = pcCuotaVentasGerente.Where(c => c.Año == año).ToArray();
+    }        
+
+
+    
+    //-----------------EVENTOS --------------------------------
+
+    //Selecciona oficina
+    private void OficinaSelectionChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            oficinaId = id;
+        }
+    }
+
+    //Selecciona Gerente en Combo
+    async Task GerenteSelectionChanged(ChangeEventArgs e)
+    {
+        string id = e.Value.ToString();
+
+        codigoGerente = id;
+                
+        pcCuotaVentasGerente = null;
+
+        //Carga Cuotas de Ventas Gerente
+        await GetData(codigoGerente);
+    }
+        
+
+}
