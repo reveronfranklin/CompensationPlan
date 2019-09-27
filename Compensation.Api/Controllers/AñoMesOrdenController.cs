@@ -55,5 +55,26 @@ namespace Compensation.Api.Controllers
            
         }
 
+        // GET: api/AñoMesOrden/5
+      
+        [HttpGet("GetListAñoMesOrden/{id}")]
+        public async Task<ActionResult<IEnumerable<PCAñoMesOrden>>> GetListAñoMesOrden(string id)
+        {
+
+            _context.Database.ExecuteSqlCommand("PCAñoOrden @p0", id);
+
+            var pCAñoMesOrden = await _context.PCAñoMesOrden.Where(o => o.Orden == id).ToListAsync();
+            if (pCAñoMesOrden == null)
+            {
+                return NotFound();
+            }
+
+            return pCAñoMesOrden;
+
+
+
+        }
+
+
     }
 }

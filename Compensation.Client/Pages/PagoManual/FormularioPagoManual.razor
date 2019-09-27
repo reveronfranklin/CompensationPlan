@@ -1,0 +1,110 @@
+﻿@using Compensation.Client.Data
+@inject AñoMesordenService añoMesordenService
+<EditForm Model="@pagoManual" OnValidSubmit="@OnValidSubmit" Mensaje="@Mensaje">
+    <h4 class="alert-danger">@Mensaje</h4>
+    <div class="container">
+
+        <div class="row centered-form">
+            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">Registrar Pago Manual</h3>
+                    </div>
+                    <div class="form-field">
+                        <label>Orden:</label>
+                        <div>
+                            <InputText Class="form-control" @bind-Value="@pagoManual.OrdenString" @onblur="@OrdenSelectionChanged" />
+                            <ValidationMessage For="@(()=> pagoManual.OrdenString)" />
+                        </div>
+                    </div>
+                    <br>
+                    <select class="custom-select" id="productoDrop" @onchange="@ProductoSelectionChanged" value="@idProducto">
+                        <option value="">-- Select Producto --</option>
+                        @if (pCAñoMesOrden != null)
+                        {
+                            @foreach (var itemProducto in pCAñoMesOrden)
+                            {
+                                <option value="@itemProducto.Producto">@itemProducto.Producto</option>
+                            }
+                        }
+
+                    </select>
+ 
+                    <br>
+                    <div class="form-field">
+                        <label>Monto Vendedor:</label>
+                        <div>
+                            <InputNumber Class="form-control" @bind-Value="@pagoManual.Monto" />
+                            <ValidationMessage For="@(()=> pagoManual.Monto)" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-field">
+                        <label>Monto Gerente:</label>
+                        <div>
+                            <InputNumber Class="form-control" @bind-Value="@pagoManual.MontoGte" />
+                            <ValidationMessage For="@(()=> pagoManual.MontoGte)" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-field">
+                        <label>Monto Gerente Producto:</label>
+                        <div>
+                            <InputNumber Class="form-control" @bind-Value="@pagoManual.MontoGteProducto" />
+                            <ValidationMessage For="@(()=> pagoManual.MontoGteProducto)" />
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label>Observaciones:</label>
+                        <div>
+                            <InputTextArea Class="form-control" @bind-Value="@pagoManual.Observaciones" />
+                            <ValidationMessage For="@(()=> pagoManual.Observaciones)" />
+                            <h6><span class="help-block pull-right" id="counter">1000 Caracteres máximos</span></h6>
+                        </div>
+
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-success">@TextoBoton</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+
+    string idProducto = "";
+    [Parameter] public WSMY685 pagoManual { get; set; } = new WSMY685();
+
+    [Parameter] public string TextoBoton { get; set; } = "Salvar";
+
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public string Mensaje { get; set; } = "";
+
+    PCAñoMesOrden[] pCAñoMesOrden { get; set; }
+
+    async Task ProductoSelectionChanged(ChangeEventArgs e)
+    {
+
+
+        pagoManual.Producto = e.Value.ToString();
+
+
+
+    }
+    async Task OrdenSelectionChanged()
+    {
+        
+        Console.WriteLine("Orden:" + pagoManual.OrdenString);
+        pCAñoMesOrden = await añoMesordenService.getListAñoMesOrdenAsync(pagoManual.OrdenString);
+
+
+
+
+    }
+
+}

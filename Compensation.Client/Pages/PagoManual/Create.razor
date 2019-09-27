@@ -1,0 +1,51 @@
+﻿@page "/crear-pagomanual"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PagoManualService pagoManualService
+@inject AñoMesordenService añoMesordenService
+@inject NavigationManager UriHelper
+
+
+<FormularioPagoManual TextoBoton="Crear" OnValidSubmit="@CrearPagoManual" pagoManual="@pagoManual" Mensaje="@Mensaje"/>
+
+@code {
+    WSMY685 pagoManual = new WSMY685();
+    PCAñoMesOrden ordenAñoMes { get; set; }
+    string Mensaje = "";
+
+    async Task CrearPagoManual()
+    {
+
+        if (pagoManual.OrdenString.Length != 10)
+        {
+            Mensaje = "Orden Invalida";
+            return;
+        }
+        else
+        {
+            ordenAñoMes = await añoMesordenService.GetAñoMesOrdenByIdAsync(pagoManual.OrdenString);
+            if (ordenAñoMes == null)
+            {
+                Mensaje = "Orden Invalida";
+                StateHasChanged();
+                return;
+
+            }
+
+        }
+
+        if (pagoManual.Monto==0 && pagoManual.MontoGte==0 && pagoManual.MontoGteProducto==0)
+        {
+             Mensaje = "Indique Monto a Pagar";
+             return;
+        }
+
+        pagoManual.FlagPagado = false;
+        pagoManual.Transaccion = "PM";
+        pagoManual.FechaActualiza = DateTime.Now;
+        pagoManual.UsuarioActualiza = "System";
+        pagoManual.Orden = Int64.Parse(pagoManual.OrdenString);
+        await pagoManualService.InsertPagoManualnAsync(pagoManual);
+        UriHelper.NavigateTo("indice-pagomanual");
+    }
+}

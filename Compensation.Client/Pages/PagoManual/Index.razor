@@ -1,0 +1,91 @@
+﻿@page "/indice-pagomanual"
+@inject HttpClient Http
+@using Compensation.Client.Data
+@inject PagoManualService  pagoManualService
+@inject IJSRuntime JS
+
+<h3>Pagos Manuales</h3>
+<div>
+    <a class="btn btn-success" href="crear-pagomanual">Nuevo Pago</a>
+</div>
+@if (pagoManual == null)
+{
+    <tesxt>  Cargando.....</tesxt>
+}
+else if (pagoManual.Length == 0)
+{
+    <tesxt>  No existen datos de Pagos Manuales pendientes.....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Orden</th>
+                <th>Producto</th>
+                <th>Monto Consultor</th>
+                <th>Monto Gerente</th>
+                <th>Monto Gerente Prod.</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pagoManual)
+            {
+            <tr>
+                <td>
+                    <a class="btn btn-success" href="editar-pagomanual/@item.IdPago">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.IdPago))">Borrar</button>
+                </td>
+
+                <td>@item.IdPago</td>
+                <td>@item.Orden</td>
+                <td>@item.Producto</td>
+                <td>@item.Monto</td>
+                <td>@item.MontoGte</td>
+                <td>@item.MontoGteProducto</td>
+                
+
+
+
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    WSMY685[] pagoManual { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    async Task GetData()
+    {
+        pagoManual = await pagoManualService.getPagoManualAsync();
+    }
+
+    async Task Borrar(long Id)
+    {
+
+        var selecionado = pagoManual.First(f => f.IdPago == Id);
+        string Mensaje = $"deseas borrar esta Orden: {selecionado.Orden}?";
+        if (await JS.Confirm("Confirmar", Mensaje, Compensation.Client.Helpers.IJSExtensions.TipoMensajeSweetAlert.question))
+        {
+
+
+            await pagoManualService.DeletePagoManualAsync(Id);
+            await GetData();
+        }
+
+
+
+
+    }
+
+}

@@ -20,7 +20,14 @@ namespace Compensation.Client.Data
             var json = await http.GetStringAsync($"{baseUrl}api/AñoMesOrden");
             return JsonConvert.DeserializeObject<PCAñoMesOrden[]>(json);
         }
-        
+        public async Task<PCAñoMesOrden[]> getListAñoMesOrdenAsync(string id)
+        {
+
+            HttpClient http = new HttpClient();
+            var json = await http.GetStringAsync($"{baseUrl}api/AñoMesOrden/GetListAñoMesOrden/{id}");
+            return JsonConvert.DeserializeObject<PCAñoMesOrden[]>(json);
+        }
+
         public async Task<PCAñoMesOrden> GetAñoMesOrdenByIdAsync(string id)
         {
             Console.WriteLine("Orden desde el servicio:" + id);

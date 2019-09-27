@@ -9,7 +9,7 @@ namespace Compensaction.Share
 
 
 //<<<<<<< HEAD
-        public const string BaseUrl = "https://localhost:44312/";   
+        public const string BaseUrl = "https://localhost:44377/";   
         
 
 

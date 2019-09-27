@@ -28,7 +28,8 @@ namespace Compensation.Client
             services.AddSingleton<OrdenesPignoradasService>();
             services.AddSingleton<AñoMesordenService>();
             services.AddSingleton<FlatComisionGerenteService>();
-            
+            services.AddSingleton<PagoManualService>();
+
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalso>();
 

@@ -233,8 +233,27 @@ namespace CompensationPlan.Calculo.Bussines
             pCComisionesTemporal = _context.PCComisionesTemporal.Find(IdTabla);
             if (pCComisionesTemporal != null)
             {
-                bool clientePagaComisionDoble = ClientePagaComisionDoble(pCComisionesTemporal.IdCliente, (DateTime)GetfechaOrden(pCComisionesTemporal.Orden.ToString()));
+                DateTime fechaOrden;
+                if (pCComisionesTemporal.Orden > 0)
+                {
+                    fechaOrden = (DateTime)GetfechaOrden(pCComisionesTemporal.Orden.ToString());
+                    if (fechaOrden==null)
+                    {
+                        fechaOrden = pCComisionesTemporal.FechaIngreso;
+                    }
+                }
+                else
+                {
+                    fechaOrden = pCComisionesTemporal.FechaIngreso;
 
+                }
+
+                bool clientePagaComisionDoble = false;
+                if (pCComisionesTemporal.Orden>0)
+                {
+                    clientePagaComisionDoble= ClientePagaComisionDoble(pCComisionesTemporal.IdCliente, (DateTime)fechaOrden);
+                }
+                 
                 if (pCComisionesTemporal.Documento == 253980)
                 {
                     var a = 1;
@@ -245,7 +264,7 @@ namespace CompensationPlan.Calculo.Bussines
                 if (pCTipoPago.FlagCalcular)
                 {
 
-                    var añoMesOrden = AñoOrden(pCComisionesTemporal.Orden.ToString());
+                    var añoMesOrden = AñoOrden(pCComisionesTemporal.Orden.ToString(), pCComisionesTemporal.FechaIngreso);
 
                     idSubcategoria = SubcategoriaProducto(pCComisionesTemporal.Producto.Trim());
                     //Comision Flat vendedor
@@ -320,61 +339,64 @@ namespace CompensationPlan.Calculo.Bussines
                 if (pCTemporal != null)
                 {
                     int cant = 1;
-                    foreach (var item in pCTemporal)
+                    foreach (var item in pCTemporal.Where(t=>t.Transaccion=="PM"))
                     {
-                        pCHistorico.Id = Guid.NewGuid().ToString();
-                        pCHistorico.IdCliente = item.IdCliente;
-                        pCHistorico.Transaccion = item.Transaccion;
-                        pCHistorico.Documento = item.Documento;
-                        pCHistorico.Linea = item.Linea;
-                        pCHistorico.IdVendedor = item.IdVendedor;
-                        pCHistorico.Orden = item.Orden;
-                        pCHistorico.Producto = item.Producto;
-                        pCHistorico.MontoReal = item.MontoReal;
-                        pCHistorico.BsComision = item.BsComision;
-                        pCHistorico.PorcFlat = item.PorcFlat;
-                        pCHistorico.TotalVentasMes = item.TotalVentasMes;
-                        pCHistorico.TotalCuotaMes = item.TotalCuotaMes;
-                        pCHistorico.IdTipoPago = item.IdTipoPago;
-                        pCHistorico.CantidadCuotasCumplidas = item.CantidadCuotasCumplidas;
-                        pCHistorico.PeriodoDesde = item.PeriodoDesde;
-                        pCHistorico.PeriodoHasta = item.PeriodoHasta;
-                        pCHistorico.ComisionRangoCumplimientoCuotaGeneral = item.ComisionRangoCumplimientoCuotaGeneral;
-                        pCHistorico.PorcRangoCumplimientoCuotaGeneral = item.PorcRangoCumplimientoCuotaGeneral;
-                        pCHistorico.PorcCantidadCuotasCumplidas = item.PorcCantidadCuotasCumplidas;
-                        pCHistorico.ComisionCantidadCuotasCumplidas = item.ComisionCantidadCuotasCumplidas;
-                        pCHistorico.FechaRegistro = DateTime.UtcNow;
-                        pCHistorico.DescripcionTipoPago = item.DescripcionTipoPago;
-                        pCHistorico.MontoString = ToCurrencyString(item.BsComision);
-                        pCHistorico.OrdenString = item.Orden.ToString();
-                        pCHistorico.DocumentoString = item.Documento.ToString();
-                        pCHistorico.MontoRealString = ToCurrencyString(item.MontoReal);
-                        pCHistorico.IdPeriodo = item.IdPeriodo;
+                        //pCHistorico.Id = Guid.NewGuid().ToString();
+                        //pCHistorico.IdCliente = item.IdCliente;
+                        //pCHistorico.Transaccion = item.Transaccion;
+                        //pCHistorico.Documento = item.Documento;
+                        //pCHistorico.Linea = item.Linea;
+                        //pCHistorico.IdVendedor = item.IdVendedor;
+                        //pCHistorico.Orden = item.Orden;
+                        //pCHistorico.Producto = item.Producto;
+                        //pCHistorico.MontoReal = item.MontoReal;
+                        //pCHistorico.BsComision = item.BsComision;
+                        //pCHistorico.PorcFlat = item.PorcFlat;
+                        //pCHistorico.TotalVentasMes = item.TotalVentasMes;
+                        //pCHistorico.TotalCuotaMes = item.TotalCuotaMes;
+                        //pCHistorico.IdTipoPago = item.IdTipoPago;
+                        //pCHistorico.CantidadCuotasCumplidas = item.CantidadCuotasCumplidas;
+                        //pCHistorico.PeriodoDesde = item.PeriodoDesde;
+                        //pCHistorico.PeriodoHasta = item.PeriodoHasta;
+                        //pCHistorico.ComisionRangoCumplimientoCuotaGeneral = item.ComisionRangoCumplimientoCuotaGeneral;
+                        //pCHistorico.PorcRangoCumplimientoCuotaGeneral = item.PorcRangoCumplimientoCuotaGeneral;
+                        //pCHistorico.PorcCantidadCuotasCumplidas = item.PorcCantidadCuotasCumplidas;
+                        //pCHistorico.ComisionCantidadCuotasCumplidas = item.ComisionCantidadCuotasCumplidas;
+                        //pCHistorico.FechaRegistro = DateTime.UtcNow;
+                        //pCHistorico.DescripcionTipoPago = item.DescripcionTipoPago;
+                        //pCHistorico.MontoString = ToCurrencyString(item.BsComision);
+                        //pCHistorico.OrdenString = item.Orden.ToString();
+                        //pCHistorico.DocumentoString = item.Documento.ToString();
+                        //pCHistorico.MontoRealString = ToCurrencyString(item.MontoReal);
+                        //pCHistorico.IdPeriodo = item.IdPeriodo;
 
-                        pCTipoPago = _context.PCTipoPago.Find(item.IdTipoPago);
-                        if (pCTipoPago!=null)
-                        {
-                            if (pCHistorico.BsComision>0)
-                            {
-                                pCHistorico.ConceptoNomina = pCTipoPago.ConceptoNominaPago;
-                            }
-                            if (pCHistorico.BsComision < 0)
-                            {
-                                pCHistorico.ConceptoNomina = pCTipoPago.ConceptoNominaDescuento;
+                        //pCTipoPago = _context.PCTipoPago.Find(item.IdTipoPago);
+                        //if (pCTipoPago!=null)
+                        //{
+                        //    if (pCHistorico.BsComision>0)
+                        //    {
+                        //        pCHistorico.ConceptoNomina = pCTipoPago.ConceptoNominaPago;
+                        //    }
+                        //    if (pCHistorico.BsComision < 0)
+                        //    {
+                        //        pCHistorico.ConceptoNomina = pCTipoPago.ConceptoNominaDescuento;
 
-                            }
+                        //    }
 
-                        }
+                        //}
 
 
-                        _context.PCHistorico.Add(pCHistorico);
+                        //_context.PCHistorico.Add(pCHistorico);
+
+               
+
+                        //Console.WriteLine($"Cerrando el reg Nro:{item.Id}");
+
+                        //_context.SaveChanges();
+
 
                         proceso.RegistrosCerrados = cant++;
-
-                        Console.WriteLine($"Cerrando el reg Nro:{item.Id}");
-
                         _context.SaveChanges();
-
                         //***** Marca el Pago Manual
                         if (item.Transaccion == "PM")
                         {
@@ -386,11 +408,15 @@ namespace CompensationPlan.Calculo.Bussines
                     }
 
                 }
+            
+                _context.Database.ExecuteSqlCommand("PCPaseTemporalHistorico @p0", "");
+                _context.Database.ExecuteSqlCommand("PCSpResumenComisionHistorico @p0", proceso.IdPeriodo);
+                _context.Database.ExecuteSqlCommand("PCLimpiaTemporal @p0", "");
             }
 
 
-            _context.Database.ExecuteSqlCommand("PCLimpiaTemporal @p0", "");
-
+           
+             
         }
 
 
@@ -459,8 +485,18 @@ namespace CompensationPlan.Calculo.Bussines
             string meshasta = "00" + _hasta[1];
             string añodhasta = _hasta[2];
             string periodoHasta = $"{Right(meshasta, 2)}/{Right(diahasta, 2)}/{añodhasta}";
+            DateTime fechaOrden;
+            if (pCComisionesTemporal.Orden>0)
+            {
+                fechaOrden = (DateTime)GetfechaOrden(pCComisionesTemporal.Orden.ToString());
+            }
+            else
+            {
+                fechaOrden = pCComisionesTemporal.FechaIngreso;
 
-            bool clientePagaComisionDoble = ClientePagaComisionDoble(pCComisionesTemporal.IdCliente, (DateTime)GetfechaOrden(pCComisionesTemporal.Orden.ToString()));
+            }
+          
+            bool clientePagaComisionDoble = ClientePagaComisionDoble(pCComisionesTemporal.IdCliente, fechaOrden);
 
             bool ordenPignorada = OrdenPignorada(pCComisionesTemporal.Orden.ToString());
 
@@ -1074,23 +1110,30 @@ namespace CompensationPlan.Calculo.Bussines
             return porcFlat;
 
         }
-        public PCAñoMesOrden AñoOrden(string Orden)
+        public PCAñoMesOrden AñoOrden(string Orden,DateTime fechaIngreso)
         {
 
-
-
+            PCAñoMesOrden pCAñoMesOrden = new PCAñoMesOrden();
+            PCAñoMesOrden result = new PCAñoMesOrden();
             _context.Database.ExecuteSqlCommand("PCAñoOrden @p0", Orden);
 
             var pcAñoMesOrden = _context.PCAñoMesOrden.Where(o => o.Orden == Orden).FirstOrDefault();
             if (pcAñoMesOrden == null)
             {
-                pcAñoMesOrden.Año = 0;
-                pcAñoMesOrden.Mes = 0;
-                pcAñoMesOrden.Orden = Orden;
+                result.Año = fechaIngreso.Year;
+                result.Mes = fechaIngreso.Month;
+                result.Orden = Orden;
+            }
+            else
+            {
+                result.Año = pcAñoMesOrden.Año;
+                result.Mes = pcAñoMesOrden.Mes;
+                result.Orden = pcAñoMesOrden.Orden;
             }
 
 
-            return pcAñoMesOrden;
+
+            return result;
 
         }
         public int SubcategoriaProducto(string Producto)
@@ -1217,6 +1260,7 @@ namespace CompensationPlan.Calculo.Bussines
             {
                 result = pCAñoMesOrden.FechaOrden;
             }
+          
             return result;
         }
 

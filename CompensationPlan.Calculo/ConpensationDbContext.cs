@@ -35,9 +35,9 @@ namespace CompensationPlan.Calculo
         public DbSet<PCFlatComisionGerente> PCFlatComisionGerente { get; set; }
         public DbSet<PCCliente> PCCliente { get; set; }
         public DbSet<PCOrdenesPignoradas> PCOrdenesPignoradas { get; set; }
-
-       
-
+        public DbSet<WSMY693> WSMY693 { get; set; }
+        public DbSet<PCResumenOficinaHistorico> PCResumenOficinaHistorico { get; set; }
+        public DbSet<PCResumenComisionHistorico> PCResumenComisionHistorico { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
