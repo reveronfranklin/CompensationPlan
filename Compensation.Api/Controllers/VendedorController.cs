@@ -24,7 +24,7 @@ namespace Compensation.Api.Controllers
 
         // GET: api/Vendedor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PCVendedor>>> GetVendedor()
+        public async Task<ActionResult<IEnumerable<PCVendedor>>> Vendedor()
         {
             _context.Database.ExecuteSqlCommand("PCSpVendedor @p0", "");
 
