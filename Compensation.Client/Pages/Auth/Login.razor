@@ -1,0 +1,43 @@
+﻿@page "/login"
+<h3>Login</h3>
+@using Compensation.Client.Auth
+@inject HttpClient http
+@inject NavigationManager UriHelper
+@inject ILoginService loginService
+
+
+
+<EditForm Model="userInfo" OnValidSubmit="LoginUsuario">
+    <DataAnnotationsValidator />
+
+    <div class="form-field">
+        <label>User:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@userInfo.Email" />
+            <ValidationMessage For="@(() => userInfo.Email)" />
+        </div>
+    </div>
+    <div class="form-field">
+        <label>Password:</label>
+        <div>
+            <InputPassword Class="form-control" @bind-Value="@userInfo.Password" />
+            <ValidationMessage For="@(() => userInfo.Password)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Log in</button>
+
+</EditForm>
+
+@code {
+    private UserInfo userInfo = new UserInfo();
+
+    private async Task LoginUsuario()
+    {
+        string baseUrl = Helper.BaseUrl;
+        Console.WriteLine("usuario" + userInfo.Email);
+        var result = await http.PostJsonAsync<UserToken>($"{baseUrl}api/Cuentas/Login", userInfo);
+        await loginService.Login(result.Token);
+        UriHelper.NavigateTo("");
+    }
+}

@@ -111,7 +111,7 @@ else
 @code {
 
     //---------- Variables necesarias ---------------------//
-    PCCuotaVentasGerente[] pcCuotaVentasGerente { get; set; }    
+    PCCuotaVentasGerente[] pcCuotaVentasGerente { get; set; }
     PCOficina[] oficinaList { get; set; }
     PCVendedor[] gerenteList { get; set; }
 
@@ -128,15 +128,15 @@ else
         await GetDataGerentes();
     }
 
-     //Lista de Oficinas
+    //Lista de Oficinas
     async Task GetDataOficina()
     {
         oficinaList = await oficinaService.GetOficinaAsync();
     }
-    
+
     //Lista de Gerentes
     async Task GetDataGerentes()
-    { 
+    {
         //carga lista de Gerentes
         gerenteList = await vendedorService.GetGerenteAsync();
     }
@@ -150,21 +150,19 @@ else
         Console.WriteLine(codigoGerente);
 
         pcCuotaVentasGerente = await cuotaVentasGerenteService.CuotaVentasGerenteAsync(codigoGerente);
-        
+
         if (año > 0 )
         {
-           await  GetDataAño(año);
+            pcCuotaVentasGerente =pcCuotaVentasGerente.Where(c => c.Año == año).ToArray();
+           
         }
 
     }
 
-    async Task GetDataAño(int año)
-    {
-        pcCuotaVentasGerente = pcCuotaVentasGerente.Where(c => c.Año == año).ToArray();
-    }        
+         
 
 
-    
+
     //-----------------EVENTOS --------------------------------
 
     //Selecciona oficina
@@ -182,12 +180,12 @@ else
         string id = e.Value.ToString();
 
         codigoGerente = id;
-                
+
         pcCuotaVentasGerente = null;
 
         //Carga Cuotas de Ventas Gerente
         await GetData(codigoGerente);
     }
-        
+
 
 }

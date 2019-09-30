@@ -1,0 +1,16 @@
+﻿@page "/logout"
+
+@using Compensation.Client.Auth
+@inject HttpClient http
+@inject NavigationManager UriHelper
+@inject ILoginService loginService
+
+<text>Deslogueando...</text>
+
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        await loginService.Logout();
+        UriHelper.NavigateTo("");
+    }
+}

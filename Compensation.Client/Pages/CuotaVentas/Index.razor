@@ -148,15 +148,10 @@ else
         pCCuotaVentas = await cuotaVentasService.GetCuotaVentasByVendedorAsync(codigoVendedor);
         if (año>0)
         {
-           await  GetDataAño(año);
+             pCCuotaVentas = pCCuotaVentas.Where(c => c.Año == año).ToArray();
         }
     }
-    async Task GetDataAño(int año)
-    {
-
-
-        pCCuotaVentas = pCCuotaVentas.Where(c => c.Año == año).ToArray();
-    }
+   
 
     async Task Borrar(int Id)
     {

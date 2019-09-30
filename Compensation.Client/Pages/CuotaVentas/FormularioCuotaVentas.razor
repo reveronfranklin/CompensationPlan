@@ -175,7 +175,7 @@
 
     }
 
-    async Task ProductoSelectionChanged(ChangeEventArgs e)
+    void ProductoSelectionChanged(ChangeEventArgs e)
     {
 
         if (int.TryParse(e.Value.ToString(), out int id))
@@ -188,7 +188,7 @@
     }
 
 
-    async Task VendedorSelectionChanged(ChangeEventArgs e)
+    void VendedorSelectionChanged(ChangeEventArgs e)
     {
         string id = e.Value.ToString();
 
@@ -196,7 +196,7 @@
         cuotaVentas.Vendedor = codigoVendedor;
 
     }
-    async Task TasaSelectionChanged(ChangeEventArgs e)
+    void TasaSelectionChanged(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int id))
         {

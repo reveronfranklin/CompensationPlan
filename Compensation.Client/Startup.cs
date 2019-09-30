@@ -32,7 +32,12 @@ namespace Compensation.Client
             services.AddSingleton<PagoManualService>();
 
             services.AddAuthorizationCore();
-            services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalso>();
+            //services.AddScoped<AuthenticationStateProvider, AuthStateProviderFalso>();
+
+            services.AddScoped<JWTAuthenticationProvider>();
+            services.AddScoped<AuthenticationStateProvider, JWTAuthenticationProvider>(provider => provider.GetRequiredService<JWTAuthenticationProvider>());
+            services.AddScoped<ILoginService, JWTAuthenticationProvider>(provider => provider.GetRequiredService<JWTAuthenticationProvider>());
+
 
             services.AddBlazorContextMenu();
            

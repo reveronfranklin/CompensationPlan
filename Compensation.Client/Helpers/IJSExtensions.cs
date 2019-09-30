@@ -1,8 +1,8 @@
 ﻿using Microsoft.JSInterop;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+
+
 
 namespace Compensation.Client.Helpers
 {
@@ -32,6 +32,22 @@ namespace Compensation.Client.Helpers
             return await js.InvokeAsync<bool>("CustomConfirm", titulo, mensaje, tipoMensajeSweetAlert.ToString());
         }
 
+        public async static Task SetInLocalStorage(this IJSRuntime js, string key, string content)
+            => await js.InvokeAsync<object>(
+            "localStorage.setItem",
+            key, content
+        );
+
+        public  static async Task<string> GetFromLocalStorage(this IJSRuntime js, string key)
+            => await js.InvokeAsync<string>(
+                "localStorage.getItem",
+                key
+                );
+
+        public async static Task RemoveItem(this IJSRuntime js, string key)
+            => await js.InvokeAsync<object>(
+                "localStorage.removeItem",
+                key);
 
 
 
@@ -39,5 +55,15 @@ namespace Compensation.Client.Helpers
         {
             question, warning, error, success, info
         }
+
+
+   
+    
+    
     }
+
+
+
+
+
 }
