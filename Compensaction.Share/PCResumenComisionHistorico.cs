@@ -24,5 +24,6 @@ namespace Compensaction.Share
 
         public string MontoString { get; set; }
 
+        public int IdPeriodo { get; set; }
     }
 }

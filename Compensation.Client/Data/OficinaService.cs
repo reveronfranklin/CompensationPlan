@@ -15,7 +15,6 @@ namespace Compensation.Client.Data
 
         public async Task<PCOficina[]> GetOficinaAsync()
         {
-
             HttpClient http = new HttpClient();
             var json = await http.GetStringAsync($"{baseUrl}api/Oficina");
             return JsonConvert.DeserializeObject<PCOficina[]>(json);

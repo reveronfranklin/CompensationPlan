@@ -1,0 +1,185 @@
+﻿@page "/indice-ResumenComisionHistorico"
+
+@using Compensation.Client.Data
+
+@inject HttpClient Http
+@inject PeriodoService periodoService
+@inject OficinaService oficinaService
+@inject ResumenComisionHistoricoService resumenComisionHistoricoService
+
+@inject NavigationManager UriHelper
+
+<h3>Resumen Comisión Histórico</h3>
+<br />
+
+<div class="card" style="width: 58rem;">
+
+    <div class="card-body">
+        <h5 class="card-title">Filtros</h5>
+
+        @if (periodoList == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Periodo</h5>
+                            <p class="card-text"></p>
+                            <select class="custom-select" id="periodoDrop" @onchange="@PeriodoSelectionChanged">
+                                <option value="">-- Select Periodo --</option>
+                                @if (periodoList != null)
+                                {
+                                    @foreach (var itemOficina in periodoList)
+                                    {
+                                        <option value="@itemOficina.ID">@itemOficina.FechaDescripcion</option>
+                                    }
+                                }
+
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Oficina</h5>
+                            <p class="card-text"></p>
+                            <select class="custom-select" id="oficinaDrop" @onchange="@OficinaSelectionChanged">
+                                <option value="">-- Select Oficina --</option>
+                                @if (oficinaList != null)
+                                {
+                                    @foreach (var itemOficina in oficinaList)
+                                    {
+                                        <option value="@itemOficina.CodOficina">@itemOficina.NombreOficina</option>
+                                    }
+                                }
+
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        }
+
+    </div>
+</div>
+
+
+@if (historicoView == null)
+{
+    <tesxt>  </tesxt>
+}
+else if (historicoView.Length == 0)
+{
+    <tesxt>  No existen datos en histórico....</tesxt>
+}
+else
+{
+    <table class="table">
+        <thead>
+
+            <tr>
+                <th>Código</th>
+                <th>Nombre Vendedor</th>
+                <th>Ficha</th>
+                <th>Monto</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in historicoView)
+            {
+                <tr>
+                    <td>@item.CodigoVendedor</td>
+                    <td>@item.NombreVendedor</td>
+                    <td>@item.Ficha</td>
+                    <td>@item.MontoString</td>
+                    <td>
+                        <a class="btn btn-success" href="/indice-DetalleComisionHistorico/@item.IdPeriodo/@item.CodigoVendedor">Ver Detalle</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    int IdPeriodo = 0;
+    int IdOficina = 0;
+
+    WSMY686[] periodoList { get; set; }
+    WSMY686[] periodoView { get; set; }
+
+    PCOficina pCOficina = new PCOficina();
+    PCOficina[] oficinaList { get; set; }
+
+    PCResumenComisionHistorico[] historicoView { get; set; }
+    PCResumenComisionHistorico[] historico { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDataPeriodo();
+        await GetDataOficina();
+    }
+
+    async Task GetDataPeriodo()
+    {
+        periodoView = await periodoService.getPeriodoAsync();
+        periodoList = periodoView.OrderByDescending(p => p.Hasta).ToArray();
+    }
+
+    async Task GetDataOficina()
+    {
+        oficinaList = await oficinaService.GetOficinaAsync();
+    }
+
+    async Task PeriodoSelectionChanged(ChangeEventArgs e)
+    {
+
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            IdPeriodo = id;
+
+            historicoView = null;
+        }
+
+    }
+
+    async Task OficinaSelectionChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            IdOficina = id;
+
+            historicoView = null;
+
+            await GetDataResumenComisionHistorico();
+        }
+    }
+
+
+    async Task GetDataResumenComisionHistorico()
+    {
+
+        //Busca resumen comision historico por IdPeriodo
+        historico = await resumenComisionHistoricoService.ResumenComisionHistoricoAsync(IdPeriodo);
+
+        //Filtro por Oficina
+        historico = historico.Where(item => item.CodigoOficina == IdOficina).ToArray();
+
+        //Vista filtrada
+        historicoView = historico;
+
+    }
+    
+}

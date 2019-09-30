@@ -24,7 +24,7 @@ namespace Compensation.Api.Controllers
 
         // GET: api/Vendedor
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PCVendedor>>> GetVendedor()
+        public async Task<ActionResult<IEnumerable<PCVendedor>>> Vendedor()
         {
             _context.Database.ExecuteSqlCommand("PCSpVendedor @p0", "");
 
@@ -42,6 +42,15 @@ namespace Compensation.Api.Controllers
             return await _context.PCVendedor.Where(v => v.Activo == true && v.Gerente== true).ToListAsync();
 
 
+        }
+
+        // GET: 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PCVendedor>> GetVendedorById(string id)
+        {
+            var vendedor = _context.PCVendedor.Where(h => h.IdVendedor == id).FirstOrDefault();
+                        
+            return vendedor;
         }
 
     }

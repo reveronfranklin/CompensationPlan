@@ -32,7 +32,13 @@ namespace Compensation.Client.Data
             return vendedorList.ToArray();
         }
 
-
+        public async Task<PCVendedor> GetVendedorByIdAsync(string id)
+        {
+            HttpClient http = new HttpClient();
+            var json = await http.GetStringAsync($"{baseUrl}api/Vendedor/{id}");
+            var vendedor = JsonConvert.DeserializeObject<PCVendedor>(json);
+            return vendedor;
+        }
 
     }
 }
