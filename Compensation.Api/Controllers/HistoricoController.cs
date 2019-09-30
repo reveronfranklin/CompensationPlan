@@ -13,10 +13,7 @@ namespace Compensation.Api.Controllers
     [ApiController]
     public class HistoricoController : ControllerBase
     {
-
-
         private readonly CompensationDbContext _context;
-
 
         public HistoricoController(CompensationDbContext context)
         {

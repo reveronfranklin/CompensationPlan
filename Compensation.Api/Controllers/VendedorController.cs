@@ -44,5 +44,14 @@ namespace Compensation.Api.Controllers
 
         }
 
+        // GET: 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PCVendedor>> GetVendedorById(string id)
+        {
+            var vendedor = _context.PCVendedor.Where(h => h.IdVendedor == id).FirstOrDefault();
+                        
+            return vendedor;
+        }
+
     }
 }

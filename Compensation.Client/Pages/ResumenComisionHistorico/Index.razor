@@ -1,9 +1,13 @@
 ﻿@page "/indice-ResumenComisionHistorico"
+
 @using Compensation.Client.Data
+
 @inject HttpClient Http
 @inject PeriodoService periodoService
 @inject OficinaService oficinaService
 @inject ResumenComisionHistoricoService resumenComisionHistoricoService
+
+@inject NavigationManager UriHelper
 
 <h3>Resumen Comisión Histórico</h3>
 <br />
@@ -60,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
 
         }
@@ -82,7 +86,7 @@ else
     <table class="table">
         <thead>
 
-            <tr>                
+            <tr>
                 <th>Código</th>
                 <th>Nombre Vendedor</th>
                 <th>Ficha</th>
@@ -93,15 +97,13 @@ else
         <tbody>
             @foreach (var item in historicoView)
             {
-                <tr>                    
+                <tr>
                     <td>@item.CodigoVendedor</td>
                     <td>@item.NombreVendedor</td>
                     <td>@item.Ficha</td>
                     <td>@item.MontoString</td>
                     <td>
-                        <!--
-                        <a class="btn btn-success" href="editar-sysfile/@item.CodigoVendedor">Ver Detalle</a>
-                        -->
+                        <a class="btn btn-success" href="/indice-DetalleComisionHistorico/@item.IdPeriodo/@item.CodigoVendedor">Ver Detalle</a>
                     </td>
                 </tr>
             }
@@ -119,14 +121,15 @@ else
 
     PCOficina pCOficina = new PCOficina();
     PCOficina[] oficinaList { get; set; }
-    
+
     PCResumenComisionHistorico[] historicoView { get; set; }
     PCResumenComisionHistorico[] historico { get; set; }
-            
+
+
     protected override async Task OnInitializedAsync()
     {
         await GetDataPeriodo();
-        await GetDataOficina();        
+        await GetDataOficina();
     }
 
     async Task GetDataPeriodo()
@@ -158,25 +161,25 @@ else
         {
             IdOficina = id;
 
-            historicoView = null;   
-            
+            historicoView = null;
+
             await GetDataResumenComisionHistorico();
         }
     }
 
 
     async Task GetDataResumenComisionHistorico()
-    { 
+    {
 
         //Busca resumen comision historico por IdPeriodo
         historico = await resumenComisionHistoricoService.ResumenComisionHistoricoAsync(IdPeriodo);
-        
+
         //Filtro por Oficina
         historico = historico.Where(item => item.CodigoOficina == IdOficina).ToArray();
 
         //Vista filtrada
         historicoView = historico;
-               
-    }
 
+    }
+    
 }

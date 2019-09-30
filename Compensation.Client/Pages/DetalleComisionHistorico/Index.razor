@@ -1,0 +1,118 @@
+﻿@page "/indice-DetalleComisionHistorico/{IdPeriodo}/{IdVendedor}"
+
+@using Compensation.Client.Data
+
+@inject HttpClient Http
+@inject HistoricoService historicoService
+@inject VendedorService vendedorService
+
+<h3>Detalle Comisión Histórico</h3>
+<br />
+
+@if (historicoView != null)
+{
+    <h4>Nombre: @nombreVendedor</h4>
+    <br />
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Tr</th>
+                <th>Doc.</th>
+                <th>Orden</th>
+                <th>Producto</th>
+                <th>Monto</th>
+                <th>Tipo Pago</th>
+                <th>Comision</th>
+                <th data-toggle="tooltip" data-placement="top" title="Porcentaje Comision Flat">% Tabla 1</th>
+                <th data-toggle="tooltip" data-placement="top" title="Porc Rango Cumplimiento Cuota General">% Tabla 2</th>
+                <th data-toggle="tooltip" data-placement="top" title="Porc Cantidad Cuotas Cumplidas">% Tabla 3</th>
+                <th>Cant. Cuotas</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in historicoView)
+            {
+                <tr>
+                    <td>@item.Transaccion</td>
+                    <td>@item.DocumentoString</td>
+                    <td>@item.OrdenString</td>
+                    <td>@item.Producto</td>
+                    <td align="right">@item.MontoRealString</td>
+                    <td>@item.DescripcionTipoPago</td>
+                    <td align="right">@item.MontoString</td>
+                    <td>@item.PorcFlat</td>
+                    <td>@item.PorcRangoCumplimientoCuotaGeneral</td>
+                    <td>@item.PorcCantidadCuotasCumplidas</td>
+                    <td>@item.CantidadCuotasCumplidas</td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td class="font-weight-bold" style="column-span='2'">Total Vendedor======></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td align="right" class="font-weight-bold">@TotalVendedorString</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter] public string IdPeriodo { get; set; }
+    [Parameter] public string IdVendedor { get; set; }
+
+    PCHistorico[] historicoView { get; set; }
+    PCHistorico[] historico { get; set; }
+
+    string nombreVendedor { get; set; } = "";
+
+    decimal TotalVendedor = 0;
+    string TotalVendedorString = "";
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        PCVendedor v = new PCVendedor();
+                      
+        v = await vendedorService.GetVendedorByIdAsync(IdVendedor);
+
+        nombreVendedor = v.Nombre;
+
+        await GetDataHistorico(int.Parse(IdPeriodo), IdVendedor);
+    }
+
+
+    async Task GetDataHistorico(int id, string _codigoVendedor)
+    {
+
+        historico = await historicoService.GetPCHistoricoByIdPeriodoAsync(id, _codigoVendedor);
+
+        historicoView = historico;
+
+        historicoView = historicoView.OrderBy(h => h.FechaRegistro).ToArray();
+
+        TotalVendedor = 0;
+
+        foreach (var item in historicoView)
+        {
+            TotalVendedor = TotalVendedor + item.BsComision;
+        }
+
+        TotalVendedorString = ToCurrencyString(TotalVendedor);
+    }
+
+    public string ToCurrencyString(decimal d)
+    {
+        return String.Format("{0:0,0.0}", d);
+    }
+
+}
