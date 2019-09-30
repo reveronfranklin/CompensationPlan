@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[WSMY685]
 (
-[IdPago] [bigint] NOT NULL,
+[IdPago] [bigint] NOT NULL IDENTITY(1, 1),
 [Transaccion] [nvarchar] (2) COLLATE Modern_Spanish_CI_AS NOT NULL,
 [Orden] [bigint] NOT NULL,
 [Producto] [nvarchar] (12) COLLATE Modern_Spanish_CI_AS NOT NULL,
@@ -15,6 +15,7 @@ CREATE TABLE [dbo].[WSMY685]
 [FechaPagado] [datetime] NULL,
 [RMonto] [numeric] (18, 2) NULL,
 [RMontoGte] [numeric] (18, 2) NULL,
-[RMontoGteProducto] [numeric] (18, 2) NULL
+[RMontoGteProducto] [numeric] (18, 2) NULL,
+[OrdenString] [nvarchar] (20) COLLATE Modern_Spanish_CI_AS NULL
 )
 GO

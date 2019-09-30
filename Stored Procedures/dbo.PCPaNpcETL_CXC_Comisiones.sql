@@ -174,6 +174,8 @@ BEGIN
 	
 		UPDATE PCComisionesTemporal SET idgerente=(SELECT supervisor FROM maestros.dbo.CSMY005 WHERE codigo=idvendedor)
 
+
+		DELETE  FROM PCComisionesTemporal WHERE NOT EXISTS(SELECT * FROM estadisticas.dbo.ventas WHERE estadisticas.dbo.ventas.orden=PCComisionesTemporal.orden)
         Select 'Proceso ejecutado de manera exitosa' as Mensaje, 1 as Error
         
 

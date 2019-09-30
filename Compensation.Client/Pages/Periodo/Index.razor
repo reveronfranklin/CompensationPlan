@@ -5,10 +5,10 @@
 @inject IJSRuntime JS
 
 
-<h3>Mantenimiento de Periodo</h3>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 <br />
 <div>
-    <a class="btn btn-success" href="crear-periodo">Nuevo Periodo</a>
+    <a class="btn btn-success oi oi-plus" href="crear-periodo"> Nuevo</a>
 </div>
 <br />
 
@@ -22,41 +22,53 @@ else if (periodo.Length == 0)
 }
 else
 {
-    <table class="table table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th></th>
-                <th>Id</th>
-                <th>Desde</th>
-                <th>Hasta</th>
-                <th>Activo</th>
-                <th>Descripcion</th>
-              
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mantenimiento de Periodo</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="display" style="width:100%" id="example">
+
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>Id</th>
+                                <th>Desde</th>
+                                <th>Hasta</th>
+                                <th>Activo</th>
+                                <th>Descripcion</th>
 
 
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in periodo)
-            {
-            <tr>
-                <td>
-                    <a class="btn btn-success" href="editar-periodo/@item.ID">Editar</a>
-                    <button class="btn btn-danger" @onclick="@(() => Borrar(item.ID))">Borrar</button>
-                </td>
 
-                <td>@item.ID</td>
-                <td>@item.Desde</td>
-                <td>@item.Hasta</td>
-                <td>@item.Activo</td>
-                <td>@item.DescPeriodo</td>
-              
-                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in periodo)
+                            {
+                                <tr>
+                                    <td>
+                                        <a class="btn btn-success oi oi-pencil" href="editar-periodo/@item.ID"></a>
+                                        <button class="btn btn-danger oi oi-trash" @onclick="@(() => Borrar(item.ID))"></button>
+                                    </td>
 
-            </tr>
-            }
-        </tbody>
-    </table>
+                                    <td>@item.ID</td>
+                                    <td>@item.Desde</td>
+                                    <td>@item.Hasta</td>
+                                    <td>@item.Activo</td>
+                                    <td>@item.DescPeriodo</td>
+
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 
@@ -76,6 +88,7 @@ else
     {
         periodoView = await periodoService.getPeriodoAsync();
         periodo = periodoView.OrderByDescending(p => p.Hasta).ToArray();
+        await JS.InvokeAsync<object>("TestDataTablesAdd", "#example");
     }
     async Task Borrar(int Id)
     {
@@ -96,3 +109,4 @@ else
 
     }
 }
+
