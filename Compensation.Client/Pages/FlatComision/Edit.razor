@@ -23,8 +23,6 @@
 
     async Task EditarFlatComision()
     {
-
-
         await flatComisionService.UpdateFlatComisionAsync(Id,flatComision);
         UriHelper.NavigateTo("indice-FlatComision");
     }

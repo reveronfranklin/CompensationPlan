@@ -15,7 +15,6 @@ namespace Compensation.Client.Data
 
         public async Task<WSMY686[]> getPeriodoAsync()
         {
-
             HttpClient http = new HttpClient();
             var json = await http.GetStringAsync($"{baseUrl}api/Periodo");
             return JsonConvert.DeserializeObject<WSMY686[]>(json);
